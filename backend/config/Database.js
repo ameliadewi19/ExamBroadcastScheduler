@@ -1,11 +1,10 @@
-const Sequelize = require("sequelize");
+const { Sequelize } = require('sequelize');
 
-const db = new Sequelize('exam_bm_scheduler', 'postgres', '12345', {
+// Configure the Sequelize instance
+const sequelize = new Sequelize('exam_bm_scheduler', 'postgres', '12345', {
     host: 'localhost',
-    dialect: 'postgres',
-    define: {
-        timestamps: false
-    }
+    dialect: 'postgres', // Use the appropriate dialect for PostgreSQL
 });
 
-module.exports = db;
+// Export the configured Sequelize instance
+module.exports = sequelize;

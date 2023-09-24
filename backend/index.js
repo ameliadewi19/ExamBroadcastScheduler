@@ -1,10 +1,12 @@
 const express = require("express");
 const dosenRoute = require("./routes/DosenRoute.js");
 const reminderRoute = require("./routes/ReminderRoute.js");
+const confirmationRoute = require('./routes/ConfirmationRoute.js');
 
 const app = express();
 
 app.use(dosenRoute);
+app.use(confirmationRoute);
 
 app.use(reminderRoute);
 

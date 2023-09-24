@@ -16,7 +16,7 @@ const sendConfirmation = async (req, res) => {
 
         for (const contact of contacts) {
             await wbm.send([contact], message);
-            const timeoutMillis = 30000; // Sesuaikan durasi timeout sesuai kebutuhan (dalam milidetik)
+            const timeoutMillis = 5000; // Sesuaikan durasi timeout sesuai kebutuhan (dalam milidetik)
             await new Promise(resolve => setTimeout(resolve, timeoutMillis));
         }
 

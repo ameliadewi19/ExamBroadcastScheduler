@@ -1,0 +1,35 @@
+GET http://localhost:5000/dosen
+
+
+# router.get('/dosen', getDosen);
+# router.get('/dosen/:id', getDosenById);
+# router.post('/dosen', createDosen);
+# router.patch('/dosen/:id', updateDosen);
+# router.delete('/dosen/:id', deleteDosen);
+
+### 
+GET http://localhost:5000/dosen/2
+
+### 
+POST http://localhost:5000/dosen
+
+Content-Type: application/json
+{
+"Dosen.nip": "3456789012", 
+"nidn": "98765432122",
+"nama": "Dosen baru",
+"no_whatsapp": "089657109999"
+}
+
+# ### 
+# PATCH http://localhost:5000/users/1 
+# Content-Type: application/json
+
+# {
+# "name": "faishal",
+# "email": "faishal@gmail.com",
+# "gender": "Pria"
+# }
+
+# ###
+# DELETE http://localhost:5000/users/2

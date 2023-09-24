@@ -11,10 +11,11 @@ GET http://localhost:5000/dosen
 GET http://localhost:5000/dosen/2
 
 ### 
-POST http://localhost:5000/dosen 
+POST http://localhost:5000/dosen
+
 Content-Type: application/json
 {
-"nip": "3456789012", 
+"Dosen.nip": "3456789012", 
 "nidn": "98765432122",
 "nama": "Dosen baru",
 "no_whatsapp": "089657109999"

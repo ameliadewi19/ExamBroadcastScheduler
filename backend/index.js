@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(dosenRoute);
 app.use(confirmationRoute);
-
 app.use(reminderRoute);
 
 app.listen(5000, () => console.log('Server Up and Running...'));

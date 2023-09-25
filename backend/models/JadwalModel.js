@@ -57,12 +57,7 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
     timestamps: false,
 });
 
-// // Definisikan asosiasi antara Ujian dan Dosen di sini jika perlu
-// JadwalUjian.belongsTo(Dosen, {
-//     foreignKey: 'id_dosen',
-//     as: 'dosen', // Alias for the association
-//   });
-  
+// // Definisikan asosiasi antara Ujian dan Dosen di sini jika perlu  
 // // Misalnya, jika Anda ingin mengaitkan Dosen dengan Ujian, Anda dapat melakukannya di sini.
 
 (async () => {

@@ -1,7 +1,7 @@
 // import JadwalUjian from "JadwalModel.js";
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
-// const JadwalUjian = require("./JadwalModel.js"); // Correct the import path
+const JadwalUjian = require("./JadwalModel.js"); // Correct the import path
 
 const Dosen = sequelize.define("Dosen", {
     id_dosen: {
@@ -31,10 +31,13 @@ const Dosen = sequelize.define("Dosen", {
 });
 
 // Define the association
-// Dosen.hasMany(JadwalUjian, {
-//     foreignKey: 'id_dosen',
-//     as: 'ujian', // Alias for the association
-//   });
+Dosen.hasMany(JadwalUjian, {
+    foreignKey: 'id_dosen',
+  });
+
+  JadwalUjian.hasOne(Dosen, {
+    foreignKey: 'id_dosen',
+  });
   
 // Sync the model with the database
 (async () => {

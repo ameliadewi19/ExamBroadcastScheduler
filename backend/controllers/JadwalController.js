@@ -1,8 +1,11 @@
+const Dosen = require("../models/DosenModel.js");
 const Ujian = require("../models/JadwalModel.js");
 
 const getUjian = async (req, res) => {
   try {
-    const response = await Ujian.findAll();
+    const response = await Ujian.findAll({
+      include:Dosen,
+    });
     res.status(200).json(response);
   } catch (error) {
     console.error(error.message);

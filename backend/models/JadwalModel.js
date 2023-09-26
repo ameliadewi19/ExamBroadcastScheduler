@@ -1,7 +1,8 @@
 // import Dosen from "DosenModel.js";
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
-const Dosen = require("./DosenModel.js"); // Sesuaikan dengan path Anda
+const Dosen = require("./DosenModel.js");
+    
 const JadwalUjian = sequelize.define("JadwalUjian", {
     id_ujian: {
         type: DataTypes.INTEGER,
@@ -13,6 +14,7 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
         allowNull: false,
         references: {
             model: Dosen, // Mengacu pada model Dosen
+            // as: "DosenUjian",
             key: "id_dosen", // Kolom kunci di model Dosen
         },
     },
@@ -49,6 +51,7 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
         allowNull: false,
         references: {
             model: Dosen, // Mengacu pada model Dosen
+            // as: "DosenPengawas",
             key: "id_dosen", // Kolom kunci di model Dosen
         },
     },

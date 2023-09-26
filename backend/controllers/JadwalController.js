@@ -1,17 +1,33 @@
 const Dosen = require("../models/DosenModel.js");
 const Ujian = require("../models/JadwalModel.js");
+const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require("../config/Database.js");
 
 const getUjian = async (req, res) => {
   try {
     const response = await Ujian.findAll({
-      include:Dosen,
+      include: [
+        {
+          model: Dosen,
+          as: 'DosenUjian',
+          on: {
+            col1: Sequelize.where(Sequelize.col('Dosen.id_dosen'), '=', Sequelize.col('JadwalUjian.id_pengawas'))
+          }
+        },
+        {
+          model: Dosen,
+          as: 'DosenPengawas', // Assuming you have an association named 'DosenPengawas'
+        }
+      ],
     });
+
     res.status(200).json(response);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Gagal mendapatkan data ujian." });
   }
 };
+
 
 const getUjianById = async (req, res) => {
   const { id } = req.params;

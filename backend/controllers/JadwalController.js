@@ -33,8 +33,7 @@ const getUjian = async (req, res) => {
         "Dosen" dosen_pengawas ON jadwal.id_pengawas = dosen_pengawas.id_dosen;
     `;
 
-    const [results, metadata] = await sequelize.query(query, { type: Sequelize.QueryTypes.SELECT });
-
+    const results = await sequelize.query(query, { type: Sequelize.QueryTypes.SELECT });
     res.status(200).json(results);
   } catch (error) {
     console.error(error.message);

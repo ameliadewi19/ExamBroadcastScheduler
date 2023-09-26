@@ -14,7 +14,6 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
         allowNull: false,
         references: {
             model: Dosen, // Mengacu pada model Dosen
-            // as: "DosenUjian",
             key: "id_dosen", // Kolom kunci di model Dosen
         },
     },
@@ -51,7 +50,6 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
         allowNull: false,
         references: {
             model: Dosen, // Mengacu pada model Dosen
-            // as: "DosenPengawas",
             key: "id_dosen", // Kolom kunci di model Dosen
         },
     },
@@ -59,9 +57,6 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
     freezeTableName: true,
     timestamps: false,
 });
-
-// // Definisikan asosiasi antara Ujian dan Dosen di sini jika perlu  
-// // Misalnya, jika Anda ingin mengaitkan Dosen dengan Ujian, Anda dapat melakukannya di sini.
 
 (async () => {
     await sequelize.sync();

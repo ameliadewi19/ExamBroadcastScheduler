@@ -34,25 +34,6 @@ const Dosen = sequelize.define("Dosen", {
 Dosen.hasMany(JadwalUjian, {
     foreignKey: 'id_dosen',
 });
-
-Dosen.hasMany(JadwalUjian, {
-    foreignKey: 'id_pengawas',
-});
-
-JadwalUjian.belongsTo(Dosen, {
-});
-
-// JadwalUjian.belongsTo(Dosen, {
-//     as: "DosenPengawas",
-//     foreignKey: "id_pengawas",
-//     targetKey: "id_dosen"
-// });
-
-// JadwalUjian.belongsTo(Dosen, {
-//     as: "DosenUjian",
-//     foreignKey: "id_dosen",
-//     targetKey: "id_dosen"
-// });
   
 // Sync the model with the database
 (async () => {

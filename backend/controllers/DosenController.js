@@ -1,9 +1,5 @@
 const Dosen = require("../models/DosenModel.js");
-const express = require('express');
-const app = express();
 
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true }));
 
 const getDosen = async(req, res) =>{
     try {

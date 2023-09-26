@@ -1,5 +1,8 @@
 GET http://localhost:5000/dosen
 
+###
+
+GET http://localhost:5000/admin
 
 # router.get('/dosen', getDosen);
 # router.get('/dosen/:id', getDosenById);
@@ -12,17 +15,16 @@ GET http://localhost:5000/dosen/1
 
 ### 
 POST http://localhost:5000/dosen
-
 Content-Type: application/json
 {
 "nip": "3456789012", 
 "nidn": "98765432122",
-"nama": "Dosen baru",
+"nama": "Dosen baru pisan",
 "no_whatsapp": "089657109999"
 }
 
 ### 
-PATCH   http://localhost:5000/dosen/1 
+PATCH http://localhost:5000/dosen/1 
 # Content-Type: application/json
 
 # {

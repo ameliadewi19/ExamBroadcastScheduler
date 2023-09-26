@@ -26,7 +26,7 @@ const sendConfirmation = async (req, res) => {
             const message = template.message.replace('{{name}}', contact.name);
 
             await wbm.send([contact], message);
-            const timeoutMillis = 30000;
+            const timeoutMillis = 5000; // Sesuaikan durasi timeout sesuai kebutuhan (dalam milidetik)
             await new Promise(resolve => setTimeout(resolve, timeoutMillis));
         }
 

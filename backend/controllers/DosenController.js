@@ -1,6 +1,6 @@
 const Dosen = require("../models/DosenModel.js");
-
-
+const JadwalUjian = require("../models/JadwalModel.js");
+const {Sequelize} = require("sequelize");
 const getDosen = async(req, res) =>{
     try {
         const response = await Dosen.findAll();
@@ -87,28 +87,37 @@ async function updateDosen(req, res) {
 
 const deleteDosen = async (req, res) => {
     try {
-        const dosenId = req.params.id;
-
-        // Cari dan perbarui semua entri JadwalUjian yang terkait dengan Dosen
-        await JadwalUjian.update(
-            { id_dosen: null }, // Setel id_dosen menjadi null
-            { where: { id_dosen: dosenId } }
-        );
-
-        // Setelah entri JadwalUjian diperbarui, Anda dapat menghapus Dosen
-        await Dosen.destroy({
-            where: {
-                id_dosen: dosenId
-            }
-        });
-
-        res.status(200).json({ msg: "Dosen Deleted" });
+      const dosenId = req.params.id;
+  
+      // Find and update all JadwalUjian entries where id_dosen or id_pengawas matches dosenId
+      await JadwalUjian.update(
+        {
+          id_dosen: null,
+          id_pengawas: null,
+        },
+        {
+          where: {
+            [Sequelize.Op.or]: [
+              { id_dosen: dosenId },
+              { id_pengawas: dosenId },
+            ],
+          },
+        }
+      );
+  
+      // After updating JadwalUjian entries, you can delete the Dosen
+      await Dosen.destroy({
+        where: {
+          id_dosen: dosenId,
+        },
+      });
+  
+      res.status(200).json({ message: "Dosen Deleted" });
     } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+      console.error(error.message);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-};
-
+  };  
 
 module.exports={
     getDosen, 

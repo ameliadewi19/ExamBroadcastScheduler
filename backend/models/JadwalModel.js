@@ -11,11 +11,12 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
     },
     id_dosen: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: Dosen, // Mengacu pada model Dosen
             key: "id_dosen", // Kolom kunci di model Dosen
         },
+        defaultValue: null,
     },
     tanggal_ujian: {
         type: DataTypes.DATE,
@@ -47,11 +48,12 @@ const JadwalUjian = sequelize.define("JadwalUjian", {
     },
     id_pengawas: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: Dosen, // Mengacu pada model Dosen
             key: "id_dosen", // Kolom kunci di model Dosen
         },
+        defaultValue: null,
     },
 }, {
     freezeTableName: true,

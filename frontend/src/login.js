@@ -4,48 +4,57 @@ import axios from 'axios';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/login', { username, password });
+      const response = await axios.post('http://localhost:5000/login', {
+        username,
+        password,
+      });
 
-      if (response.data.success) {
-        setMessage('Login successful');
-      } else {
-        setMessage('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setMessage('An error occurred');
+      // Jika login berhasil, Anda dapat menavigasi pengguna ke halaman lain atau melakukan tindakan lain yang sesuai.
+      console.log('Login berhasil', response.data);
+    } catch (err) {
+      setError('Login gagal. Username atau password salah.');
     }
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
+      {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label>Username:</label>
           <input
             type="text"
+            placeholder="Masukkan username Anda"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUsernameChange}
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Password:</label>
           <input
             type="password"
+            placeholder="Masukkan password Anda"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
           />
         </div>
         <button type="submit">Login</button>
       </form>
-      <p>{message}</p>
     </div>
   );
 }

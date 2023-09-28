@@ -4,9 +4,11 @@ const loginRoute = require("./routes/LoginRoute.js");
 const dosenRoute = require("./routes/DosenRoute.js");
 const jadwalRoute = require("./routes/JadwalRoute.js");
 const confirmationRoute = require('./routes/ConfirmationRoute.js');
+const cors = require('cors');
 // require('./controllers/ReminderController.js');
 
 const app = express();
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

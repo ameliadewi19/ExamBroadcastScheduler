@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -31,53 +32,53 @@ function Login() {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row justify-content-center" style={{ marginTop: '150px' }}>
-        <div className="col-4">
-          <div className="card mb-4">
-            <div className="card-header d-flex justify-content-center align-items-center"> 
-              <h5 className="mb-0">Login</h5>
-            </div>
-            <div className="card-body">
-            {error && <div className="error">{error}</div>}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="basic-icon-default-email">Username</label>
-                  <div className="input-group input-group-merge">
-                    <span id="basic-icon-default-fullname2" className="input-group-text">
-                      <i className="bx bx-user"></i>
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Masukkan username anda"
-                      value={username}
-                      onChange={handleUsernameChange}
-                    />
+    <main className="d-flex w-100">
+      <div className="container d-flex flex-column">
+        <div className="row vh-100">
+          <div className="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+            <div className="d-table-cell align-middle">
+              <div className="text-center mt-4">
+                <p className="lead">
+                  Sign in to your account to continue
+                </p>
+              </div>
+
+              <div className="card">
+                <div className="card-body">
+                  <div className="m-sm-3">
+                    {error && <div className="error">{error}</div>}
+                    <form onSubmit={handleSubmit}>
+                      <div className="mb-3">
+                        <label className="form-label">Username</label>
+                        <input className="form-control form-control-lg" 
+                            type="text"
+                            placeholder="Masukkan username Anda"
+                            value={username}
+                            onChange={handleUsernameChange}/>
+                      </div>
+                      <div className="mb-3">
+                        <label className="form-label">Password</label>
+                        <input className="form-control form-control-lg"
+                          type="password"
+                          placeholder="Masukkan password Anda"
+                          value={password}
+                          onChange={handlePasswordChange}/>
+                      </div>
+                      <div className="d-grid gap-2 mt-3">
+                        <button type="submit" className="btn btn-lg btn-primary">Login</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="basic-icon-default-password">Password</label>
-                  <div className="input-group input-group-merge">
-                    <span className="input-group-text"><i className="bx bx-lock"></i></span>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Masukkan Passowrd anda"
-                      value={password}
-                      onChange={handlePasswordChange}
-                    />
-                  </div>
-                </div>
-                <div className="d-flex justify-content-center align-items-center">
-                  <button type="submit" className="btn btn-primary ">Login</button>
-                </div>
-              </form>
+              </div>
+              <div className="text-center mb-3">
+                Don't have an account? <a href="pages-sign-up.html">Sign up</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

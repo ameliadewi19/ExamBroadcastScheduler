@@ -5,7 +5,7 @@ const dosenRoute = require("./routes/DosenRoute.js");
 const jadwalRoute = require("./routes/JadwalRoute.js");
 const confirmationRoute = require('./routes/ConfirmationRoute.js');
 const cors = require('cors');
-// require('./controllers/ReminderController.js');
+require('./controllers/ReminderController.js');
 
 const app = express();
 app.use(cors());

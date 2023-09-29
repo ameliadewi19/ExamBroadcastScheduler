@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer'); 
 const {
   getUjian,
   getUjianById,
@@ -9,9 +10,13 @@ const {
 
 const router = express.Router();
 
+// Set up multer for file uploads
+const storage = multer.memoryStorage(); // Store the uploaded file in memory
+const upload = multer({ storage });
+
 router.get('/jadwal-ujian', getUjian);
 router.get('/jadwal-ujian/:id', getUjianById);
-router.post('/jadwal-ujian', createUjian);
+router.post('/jadwal-ujian', upload.single('excelFile'), createUjian);
 router.patch('/jadwal-ujian/:id', updateUjian);
 router.delete('/jadwal-ujian/:id', deleteUjian);
 

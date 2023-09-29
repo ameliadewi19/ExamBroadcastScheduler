@@ -4,67 +4,73 @@ import axios from 'axios';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/login', { username, password });
+      const response = await axios.post('http://localhost:5000/login', {
+        username,
+        password,
+      });
 
-      if (response.data.success) {
-        setMessage('Login successful');
-      } else {
-        setMessage('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setMessage('An error occurred');
+      // Jika login berhasil, Anda dapat menavigasi pengguna ke halaman lain atau melakukan tindakan lain yang sesuai.
+      console.log('Login berhasil', response.data);
+    } catch (err) {
+      setError('Login gagal. Username atau password salah.');
     }
   };
 
   return (
-    <div class="container-fluid">
+    <div className="container-fluid">
       <div className="row justify-content-center" style={{ marginTop: '150px' }}>
-        <div class="col-4">
-          <div class="card mb-4">
-            <div class="card-header d-flex justify-content-center align-items-center"> 
-              <h5 class="mb-0">Login</h5>
+        <div className="col-4">
+          <div className="card mb-4">
+            <div className="card-header d-flex justify-content-center align-items-center"> 
+              <h5 className="mb-0">Login</h5>
             </div>
-            <div class="card-body">
-              <form>
-                <div class="mb-3">
-                  <label class="form-label" for="basic-icon-default-email">Email</label>
-                  <div class="input-group input-group-merge">
-                    <span id="basic-icon-default-fullname2" class="input-group-text">
-                      <i class="bx bx-user"></i>
+            <div className="card-body">
+            {error && <div className="error">{error}</div>}
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="basic-icon-default-email">Username</label>
+                  <div className="input-group input-group-merge">
+                    <span id="basic-icon-default-fullname2" className="input-group-text">
+                      <i className="bx bx-user"></i>
                     </span>
                     <input
                       type="text"
-                      class="form-control"
-                      id="basic-icon-default-fullname"
-                      placeholder="admin@gmail.com"
-                      aria-label="John Doe"
-                      aria-describedby="basic-icon-default-fullname2"
+                      className="form-control"
+                      placeholder="Masukkan username anda"
+                      value={username}
+                      onChange={handleUsernameChange}
                     />
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label" for="basic-icon-default-password">Password</label>
-                  <div class="input-group input-group-merge">
-                    <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="basic-icon-default-password">Password</label>
+                  <div className="input-group input-group-merge">
+                    <span className="input-group-text"><i className="bx bx-lock"></i></span>
                     <input
-                      type="text"
-                      id="basic-icon-default-email"
-                      class="form-control"
-                      placeholder="password"
-                      aria-label="john.doe"
-                      aria-describedby="basic-icon-default-email2"
+                      type="password"
+                      className="form-control"
+                      placeholder="Masukkan Passowrd anda"
+                      value={password}
+                      onChange={handlePasswordChange}
                     />
                   </div>
                 </div>
-                <div class="d-flex justify-content-center align-items-center">
-                  <button type="submit" class="btn btn-primary ">Send</button>
+                <div className="d-flex justify-content-center align-items-center">
+                  <button type="submit" className="btn btn-primary ">Login</button>
                 </div>
               </form>
             </div>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 // Using Arrow Function
-const Confirmation = () => {
+const Dashboard = () => {
     const history = useNavigate();
 
     return (
@@ -124,4 +124,4 @@ const Confirmation = () => {
     );
 };
 
-export default Confirmation;
+export default Dashboard;

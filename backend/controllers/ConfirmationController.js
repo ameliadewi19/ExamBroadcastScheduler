@@ -1,8 +1,11 @@
 const wbm = require('wbm');
 const Dosen = require("../models/DosenModel.js"); // Sesuaikan dengan path yang benar
+const JadwalUjian = require("../models/JadwalModel.js");
+const axios = require('axios');
 const Confirmation = require("../models/ConfirmationModel.js"); // Sesuaikan dengan path yang benar
 
 const sendConfirmation = async (req, res) => {
+    // test git
     try {
         await wbm.start({ showBrowser: true });
 
@@ -15,15 +18,29 @@ const sendConfirmation = async (req, res) => {
             return;
         }
 
-        const dosens = await Dosen.findAll();
+        const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
+        const jadwals = response.data;
 
-        const contacts = dosens.map(dosen => ({
-            phone: dosen.no_whatsapp,
-            name: dosen.nama,
+        const contacts = jadwals.map(jadwal => ({
+            phone: jadwal.no_whatsapp_dosen_pengawas,
+            name: jadwal.nama_dosen_pengawas,
+            matkul: jadwal.nama_matakuliah,
+            tanggal: jadwal.tanggal_ujian,
+            kelas: jadwal.kelas,
+            waktu_mulai: jadwal.waktu_mulai,
+            waktu_selesai: jadwal.waktu_selesai,
+            ruangan: jadwal.ruangan
         }));
 
         for (const contact of contacts) {
-            const message = template.message.replace('{{name}}', contact.name);
+            const message = template.message
+                .replace('{{name}}', contact.name)
+                .replace('{{tanggal}}', contact.tanggal)
+                .replace('{{matkul}}', contact.matkul)
+                .replace('{{kelas}}', contact.kelas)
+                .replace('{{waktu_mulai}}', contact.waktu_mulai)
+                .replace('{{waktu_selesai}}', contact.waktu_selesai)
+                .replace('{{ruangan}}', contact.ruangan);
 
             await wbm.send([contact], message);
             const timeoutMillis = 5000; // Sesuaikan durasi timeout sesuai kebutuhan (dalam milidetik)

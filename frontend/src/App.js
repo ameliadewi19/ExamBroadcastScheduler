@@ -1,14 +1,20 @@
 import React from 'react';
-import './App.css';
-import Login from './login.js';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './components/Login.js';
+import Confirmation from './components/Confirmation';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Login />
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Login />
+          </>
+        }/>
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 

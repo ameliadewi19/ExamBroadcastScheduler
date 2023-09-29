@@ -4,7 +4,7 @@ const loginRoute = require("./routes/LoginRoute.js");
 const dosenRoute = require("./routes/DosenRoute.js");
 const jadwalRoute = require("./routes/JadwalRoute.js");
 const confirmationRoute = require('./routes/ConfirmationRoute.js');
-// require('./controllers/ReminderController.js');
+require('./controllers/ReminderController.js');
 
 const app = express();
 

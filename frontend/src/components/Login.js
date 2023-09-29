@@ -14,6 +14,8 @@ function Login() {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  const [message, setMessage] = useState('');
+  const history = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,8 +25,7 @@ function Login() {
         username,
         password,
       });
-
-      // Jika login berhasil, Anda dapat menavigasi pengguna ke halaman lain atau melakukan tindakan lain yang sesuai.
+      
       console.log('Login berhasil', response.data);
     } catch (err) {
       setError('Login gagal. Username atau password salah.');
@@ -38,6 +39,7 @@ function Login() {
           <div className="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
             <div className="d-table-cell align-middle">
               <div className="text-center mt-4">
+                <h1 className="h2">Welcome back!</h1>
                 <p className="lead">
                   Sign in to your account to continue
                 </p>

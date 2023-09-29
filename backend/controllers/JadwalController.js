@@ -1,5 +1,8 @@
 const Ujian = require("../models/JadwalModel.js");
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize } = require("sequelize");
+const xlsx = require("xlsx");
+const { format } = require('date-fns');
+const JadwalUjian = require('../models/JadwalModel.js');
 const sequelize = require("../config/Database.js");
 const getUjian = async (req, res) => {
   try {
@@ -95,13 +98,66 @@ const getUjianById = async (req, res) => {
 
 const createUjian = async (req, res) => {
   try {
-    const newUjian = await Ujian.create(req.body);
-    res.status(201).json(newUjian);
+    // Check if a file was uploaded in the request
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({ error: 'No Excel file uploaded.' });
+    }
+
+    // Read the Excel file using xlsx
+    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+
+    // Assuming your Excel file has a single worksheet, use the first one
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    // Convert the worksheet data to an array of objects
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    const columnMappings = {
+      "Kode Dosen Pengampu": "id_dosen",
+      "Tanggal Ujian": "tanggal_ujian",
+      "Waktu Mulai": "waktu_mulai",
+      "Waktu Selesai": "waktu_selesai",
+      "Nama Matakuliah": "nama_matakuliah",
+      "Jenis Mata Kuliah": "jenis_matakuliah",
+      "Kelas": "kelas",
+      "Ruangan": "ruangan",
+      "Kode Dosen Pengawas": "id_pengawas",
+    };
+    const jadwalUjianDataArray = [];
+    for (const row of data) {
+      const excelDate = row["Tanggal Ujian"]; // Get the date in Excel format
+      const postgresDate = parseExcelDate(excelDate); // Convert to PostgreSQL format
+
+      const jadwalUjianData = {
+        // Map the Excel column name to the database field name
+        [columnMappings["Kode Dosen Pengampu"]]: row["Kode Dosen Pengampu"],
+        [columnMappings["Tanggal Ujian"]]: postgresDate,
+        [columnMappings["Waktu Mulai"]]: row["Waktu Mulai"],
+        [columnMappings["Waktu Selesai"]]: row["Waktu Selesai"],
+        [columnMappings["Nama Matakuliah"]]: row["Nama Matakuliah"],
+        [columnMappings["Jenis Mata Kuliah"]]: row["Jenis Mata Kuliah"],
+        [columnMappings["Kelas"]]: row["Kelas"],
+        [columnMappings["Ruangan"]]: row["Ruangan"],
+        [columnMappings["Kode Dosen Pengawas"]]: row["Kode Dosen Pengawas"],
+      };
+      jadwalUjianDataArray.push(jadwalUjianData);
+    }
+    console.log(jadwalUjianDataArray);
+    // Create JadwalUjian records from the Excel data
+    await JadwalUjian.bulkCreate(jadwalUjianDataArray);
+    res.status(201).json({ message: 'Jadwal Ujian records created from Excel.' });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ error: "Gagal membuat ujian baru." });
+    res.status(500).json({ error: 'Failed to create Jadwal Ujian records from Excel.' });
   }
 };
+
+// Function to parse Excel date format (29/09/2023) to PostgreSQL date format (2023-09-29)
+function parseExcelDate(excelDate) {
+  const [day, month, year] = excelDate.split('/').map(Number);
+  // Assuming the Excel date format is DD/MM/YYYY
+  // Use date-fns format to convert to PostgreSQL date format (YYYY-MM-DD)
+  return format(new Date(year, month - 1, day), 'yyyy-MM-dd');
+}
 
 const updateUjian = async (req, res) => {
   const { id } = req.params;

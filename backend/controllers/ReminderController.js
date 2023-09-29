@@ -7,7 +7,7 @@ const MAX_MESSAGES_PER_INTERVAL = 10;
 const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 
 //Task send H-1
-cron.schedule('46 11 * * *', async () => {
+cron.schedule('36 13 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -36,20 +36,41 @@ cron.schedule('46 11 * * *', async () => {
             ruangan: data.ruangan,
         }));
 
+        const groupedContacts = {};
+        contacts.forEach(contact => {
+            if (!groupedContacts[contact.phone]) {
+                groupedContacts[contact.phone] = contact;
+            }
+        });
+        
+        const uniqueContacts = Object.values(groupedContacts);
+
         await wbm.start({ showBrowser: true });
 
         let contactCounter = 0;
 
         const sendNextContact = async () => {
-            if (contactCounter < contacts.length) {
-                const contact = contacts[contactCounter];
+            if (contactCounter < uniqueContacts.length) {
+                const contact = uniqueContacts[contactCounter];
                 const parsedDate = new Date(contact.tanggal);
                 const formatedTgl = format(parsedDate, 'EEEE, d MMMM yyyy', { locale: require('date-fns/locale/id') });
                 
-                const message = `Halo {{name}}, jadwal ujian kamu besok, ${formatedTgl} pukul {{waktu_mulai}} - {{waktu_selesai}} untuk mata kuliah {{nama_matakuliah}} {{jenis_matakuliah}} kelas {{kelas}} di ruangan {{ruangan}}.`;
-                await wbm.send([contact], message);
-                const timeoutMillis = 15000;
-                await new Promise(resolve => setTimeout(resolve, timeoutMillis));
+                const reminders = [];
+                for (const data of filteredDatas) {
+                    if (data.no_whatsapp_dosen_pengawas === contact.phone) {
+                        const reminderMessage = `${formatedTgl} pukul ${data.waktu_mulai} - ${data.waktu_selesai} untuk mata kuliah ${data.nama_matakuliah} ${data.jenis_matakuliah} kelas ${data.kelas} di ruangan ${data.ruangan}.`;
+                        reminders.push(reminderMessage);
+                    }
+                }
+
+                if (reminders.length > 0) {
+                    // Join the reminders into a single message
+                    const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas besok :\n\n${reminders.join('\n\n')}`;
+        
+                    await wbm.send([contact], message);
+                    const timeoutMillis = 15000;
+                    await new Promise(resolve => setTimeout(resolve, timeoutMillis));
+                }
                 contactCounter++;
         
                 if (contactCounter < contacts.length && contactCounter % MAX_MESSAGES_PER_INTERVAL === 0) {
@@ -70,7 +91,7 @@ cron.schedule('46 11 * * *', async () => {
 });
 
 //Task send D-Day
-cron.schedule('6 12 * * *', async () => {
+cron.schedule('56 13 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -96,21 +117,41 @@ cron.schedule('6 12 * * *', async () => {
             ruangan: data.ruangan,
         }));
 
+        const groupedContacts = {};
+        contacts.forEach(contact => {
+            if (!groupedContacts[contact.phone]) {
+                groupedContacts[contact.phone] = contact;
+            }
+        });
+        
+        const uniqueContacts = Object.values(groupedContacts);
+
         await wbm.start({ showBrowser: true });
 
         let contactCounter = 0;
 
         const sendNextContact = async () => {
-            if (contactCounter < contacts.length) {
-                const contact = contacts[contactCounter];
-
+            if (contactCounter < uniqueContacts.length) {
+                const contact = uniqueContacts[contactCounter];
                 const parsedDate = new Date(contact.tanggal);
                 const formatedTgl = format(parsedDate, 'EEEE, d MMMM yyyy', { locale: require('date-fns/locale/id') });
                 
-                const message = `Halo {{name}}, jadwal ujian kamu hari ini, ${formatedTgl} pukul {{waktu_mulai}} - {{waktu_selesai}} untuk mata kuliah {{nama_matakuliah}} {{jenis_matakuliah}} kelas {{kelas}} di ruangan {{ruangan}}.`;
-                await wbm.send([contact], message);
-                const timeoutMillis = 10000;
-                await new Promise(resolve => setTimeout(resolve, timeoutMillis));
+                const reminders = [];
+                for (const data of filteredDatas) {
+                    if (data.no_whatsapp_dosen_pengawas === contact.phone) {
+                        const reminderMessage = `${formatedTgl} pukul ${data.waktu_mulai} - ${data.waktu_selesai} untuk mata kuliah ${data.nama_matakuliah} ${data.jenis_matakuliah} kelas ${data.kelas} di ruangan ${data.ruangan}.`;
+                        reminders.push(reminderMessage);
+                    }
+                }
+
+                if (reminders.length > 0) {
+                    // Join the reminders into a single message
+                    const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas hari ini :\n\n${reminders.join('\n\n')}`;
+        
+                    await wbm.send([contact], message);
+                    const timeoutMillis = 15000;
+                    await new Promise(resolve => setTimeout(resolve, timeoutMillis));
+                }
                 contactCounter++;
         
                 if (contactCounter < contacts.length && contactCounter % MAX_MESSAGES_PER_INTERVAL === 0) {

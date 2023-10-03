@@ -4,6 +4,8 @@ const xlsx = require("xlsx");
 const { format } = require('date-fns');
 const JadwalUjian = require('../models/JadwalModel.js');
 const sequelize = require("../config/Database.js");
+const path = require('path');
+
 const getUjian = async (req, res) => {
   try {
     const query = `
@@ -180,7 +182,16 @@ const updateUjian = async (req, res) => {
 
 const deleteUjian = async (req, res) => {
   const { id } = req.params;
-  try {
+  try {// Function to download the Excel template file
+    const downloadExcelTemplate = (req, res) => {
+      const templateFilePath = path.join(__dirname, 'public', 'excel-template.xlsx');
+      res.download(templateFilePath, 'excel-template.xlsx', (err) => {
+        if (err) {
+          console.error(err.message);
+          res.status(500).json({ error: 'Failed to download template file.' });
+        }
+      });
+    };
     const deleted = await Ujian.destroy({
       where: {
         id_ujian: id,
@@ -197,10 +208,22 @@ const deleteUjian = async (req, res) => {
   }
 };
 
+// Function to download the Excel template file
+const downloadExcelTemplate = (req, res) => {
+  const templateFilePath = path.join(__dirname, 'public/template/', 'excel-template.xlsx');
+  res.download(templateFilePath, 'excel-template.xlsx', (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Failed to download template file.' });
+    }
+  });
+};
+
 module.exports = {
   getUjian,
   getUjianById,
   createUjian,
   updateUjian,
   deleteUjian,
+  downloadExcelTemplate,
 };

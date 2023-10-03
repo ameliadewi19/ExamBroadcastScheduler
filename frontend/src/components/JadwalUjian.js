@@ -23,18 +23,51 @@ const JadwalUjian = () => {
   };
 
   const handleDelete = (id) => {
-    // Send a DELETE request to your endpoint with the selected id
-    axios.delete(`http://localhost:5000/jadwal-ujian/${id}`)
-      .then(response => {
-        console.log('Delete successful');
-        // Refresh the data after deletion
-        fetchUjianData();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const confirmDelete = window.confirm(`Are you sure you want to delete data Jadwal with ID ${id}?`);
+    
+    if (confirmDelete) {
+      axios.delete(`http://localhost:5000/jadwal-ujian/${id}`)
+        .then(response => {
+          console.log('Delete successful');
+          fetchUjianData();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   };
 
+  const handleFileUpload = async (e) => {
+    const fileInput = e.target; // Get a reference to the file input element
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('excelFile', file);
+  
+    // Show a confirmation dialog before proceeding with the upload
+    const confirmUpload = window.confirm("Are you sure you want to upload this Excel file?");
+    
+    if (confirmUpload) {
+      try {
+        const response = await axios.post('http://localhost:5000/jadwal-ujian', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response.data);
+        fetchUjianData();
+  
+        // Clear the file input field after successful upload
+        fileInput.value = ''; // Reset the file input value to an empty string
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // User canceled the upload, you can handle it as needed
+      console.log("Upload canceled.");
+    }
+  };
+    
+  
   return (
     <main className="content">
       <div className="container-fluid p-0">
@@ -44,10 +77,11 @@ const JadwalUjian = () => {
             <div className="card">
               <div className="card-header">
                 <h5 className="card-title">Tambah Data</h5>
-                <button className="btn btn-primary mt-2">
-                  <i className="align-middle" data-feather="calendar"></i>
-                  <span className="align-middle">Tambah Dosen</span>
-                </button>
+                <input type="file" accept=".xlsx" onChange={handleFileUpload}/>
+                  <a className='btn btn-primary mt-2' href="/template/excel-template.xlsx" download>
+                    <i className="align-middle" data-feather="download"></i>
+                    <span className="align-middle">Download Template</span>
+                  </a>
               </div>
               <div className="card-body">
                 <div className="table-responsive">
@@ -81,12 +115,12 @@ const JadwalUjian = () => {
                           <td>{item.nama_dosen_pengawas}</td>
                           <td>
                             <button className="btn btn-primary mt-2" style={{ marginRight: '5px' }}>
-                              <i className="align-middle" data-feather="edit">.</i>
+                              <i className="align-middle" data-feather="edit"></i>
                             </button>
                             <button
                             className="btn btn-danger mt-2" onClick={() => handleDelete(item.id_ujian)} // Pass the id to the handler
                             >
-                            <i className="align-middle" data-feather="trash">.</i>
+                            <i className="align-middle" data-feather="trash"></i>
                           </button>
                           </td>
                         </tr>

@@ -11,7 +11,11 @@ const ConfirmationTemplate = sequelize.define("ConfirmationTemplate", {
     message: {
         type: DataTypes.TEXT,
         allowNull: false,
-    }
+    },
+    pembuka: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
 }, {
     freezeTableName: true, // This option prevents Sequelize from pluralizing the table name
     timestamps: false, // Include createdAt and updatedAt columns

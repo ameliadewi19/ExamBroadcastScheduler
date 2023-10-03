@@ -38,33 +38,35 @@ const JadwalUjian = () => {
   };
 
   const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+    const fileInput = e.target; // Get a reference to the file input element
+    const file = fileInput.files[0];
     const formData = new FormData();
     formData.append('excelFile', file);
-
-    try {
-      const response = await axios.post('http://localhost:5000/jadwal-ujian', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      fetchUjianData();
-    } catch (error) {
-      console.error(error);
+  
+    // Show a confirmation dialog before proceeding with the upload
+    const confirmUpload = window.confirm("Are you sure you want to upload this Excel file?");
+    
+    if (confirmUpload) {
+      try {
+        const response = await axios.post('http://localhost:5000/jadwal-ujian', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response.data);
+        fetchUjianData();
+  
+        // Clear the file input field after successful upload
+        fileInput.value = ''; // Reset the file input value to an empty string
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // User canceled the upload, you can handle it as needed
+      console.log("Upload canceled.");
     }
   };
-
-  const downloadExcelTemplate = () => {
-    // Define the URL to your Excel template file within the public/template directory
-    const templateFileUrl = '/template/excel-template.xlsx'; // Adjust the path as needed
-  
-    // Create a link element to trigger the download
-    const link = document.createElement('a');
-    link.href = templateFileUrl;
-    link.setAttribute('download', 'excel-template.xlsx'); // Specify the filename
-    link.click();
-  };
+    
   
   return (
     <main className="content">
@@ -76,10 +78,10 @@ const JadwalUjian = () => {
               <div className="card-header">
                 <h5 className="card-title">Tambah Data</h5>
                 <input type="file" accept=".xlsx" onChange={handleFileUpload}/>
-                  <button className="btn btn-primary mt-2" onClick={downloadExcelTemplate}>
+                  <a className='btn btn-primary mt-2' href="/template/excel-template.xlsx" download>
                     <i className="align-middle" data-feather="download"></i>
                     <span className="align-middle">Download Template</span>
-                  </button>
+                  </a>
               </div>
               <div className="card-body">
                 <div className="table-responsive">

@@ -1,0 +1,15 @@
+/* CSS untuk mengatur modal */
+.modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100% - 100px); /* Sesuaikan dengan kebutuhan Anda */
+  }
+  
+  .modal-content {
+    width: 80%; /* Sesuaikan dengan lebar modal yang diinginkan */
+  }
+
+  .modal {
+    z-index: 9999;
+  }

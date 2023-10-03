@@ -23,16 +23,18 @@ const JadwalUjian = () => {
   };
 
   const handleDelete = (id) => {
-    // Send a DELETE request to your endpoint with the selected id
-    axios.delete(`http://localhost:5000/jadwal-ujian/${id}`)
-      .then(response => {
-        console.log('Delete successful');
-        // Refresh the data after deletion
-        fetchUjianData();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const confirmDelete = window.confirm(`Are you sure you want to delete data Jadwal with ID ${id}?`);
+    
+    if (confirmDelete) {
+      axios.delete(`http://localhost:5000/jadwal-ujian/${id}`)
+        .then(response => {
+          console.log('Delete successful');
+          fetchUjianData();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   };
 
   return (

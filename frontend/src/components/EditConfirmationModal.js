@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import feather from 'feather-icons';
 
-const AddConfirmationModal = ({ reloadData }) => {
+const EditConfirmationModal = ({ reloadData }) => {
   const [formData, setFormData] = useState({ message: '', pembuka: '' });
   const [showModal, setShowModal] = useState(false);
   const modalRef = useRef();
@@ -73,4 +73,4 @@ const AddConfirmationModal = ({ reloadData }) => {
   );
 };
 
-export default AddConfirmationModal;
+export default EditConfirmationModal;

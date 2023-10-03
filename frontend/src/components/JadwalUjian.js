@@ -76,13 +76,20 @@ const JadwalUjian = () => {
           <div className="col-xl-12">
             <div className="card">
               <div className="card-header">
-                <h5 className="card-title">Tambah Data</h5>
-                <input type="file" accept=".xlsx" onChange={handleFileUpload}/>
-                  <a className='btn btn-primary mt-2' href="/template/excel-template.xlsx" download>
-                    <i className="align-middle" data-feather="download"></i>
-                    <span className="align-middle">Download Template</span>
-                  </a>
+              <h5 className="card-title mb-3">Tambah Data</h5>
+                <div className="row">
+                  <div className="col">
+                    <input type="file" accept=".xlsx" onChange={handleFileUpload}/>
+                  </div>
+                  <div className="col text-end">
+                    <a className='btn btn-primary' href="/template/excel-template.xlsx" download>
+                      <i className="" data-feather="download"></i>
+                      <span className=""> Download Template</span>
+                    </a>
+                  </div>
               </div>
+            </div>
+
               <div className="card-body">
                 <div className="table-responsive">
                   <table className="table table-striped">

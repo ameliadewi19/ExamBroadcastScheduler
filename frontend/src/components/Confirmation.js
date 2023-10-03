@@ -10,8 +10,8 @@ const Confirmation = () => {
   const [confirmationData, setConfirmationData] = useState([]); // State to store the fetched data
 
   useEffect(() => {
-    feather.replace(); // Replace the icons after component mounts
     fetchConfirmationData(); // Fetch data when the component mounts
+    feather.replace(); // Replace the icons after component mounts
   }, []);
 
   const fetchConfirmationData = () => {
@@ -25,16 +25,18 @@ const Confirmation = () => {
   };
 
   const handleDelete = (id) => {
-    // Send a DELETE request to your endpoint with the selected id
-    axios.delete(`http://localhost:5000/confirmations/${id}`)
-      .then(response => {
-        console.log('Delete successful');
-        // Refresh the data after deletion
-        fetchConfirmationData();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const confirmDelete = window.confirm(`Are you sure you want to delete data Confirmation Template with ID ${id}?`);
+    
+    if (confirmDelete) {
+        axios.delete(`http://localhost:5000/confirmations/${id}`)
+          .then(response => {
+            console.log('Delete successful');
+            fetchConfirmationData();
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    }
   };
 
   const handleSend = (id) => {
@@ -59,14 +61,18 @@ const Confirmation = () => {
             <div className="card">
               <div className="card-header">
                 <h5 className="card-title">Tambah Data</h5>
-                {/* <AddConfirmationModal /> */}
-                <button
+                {/* <button
                     className="btn btn-primary mt-2"
                     data-bs-toggle="modal"
                     data-bs-target="#addConfirmationModal"
                   >
                     <i className="align-middle" data-feather="plus"></i> Tambah Data
-                </button>      
+                </button>       */}
+                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addConfirmationModal">
+                  <i className="" data-feather="plus"></i>
+                   Add Confirmation Template
+                </button>
+                <AddConfirmationModal reloadData={fetchConfirmationData}/>
               </div>
               <div className="card-body">
                 <div className="table-responsive">
@@ -89,7 +95,7 @@ const Confirmation = () => {
                               <i className="align-middle" data-feather="edit"></i> Edit
                             </button>
                             <button
-                            className="btn btn-danger mt-2" onClick={() => handleDelete(item.id_ujian)} // Pass the id to the handler
+                            className="btn btn-danger mt-2" onClick={() => handleDelete(item.id)} // Pass the id to the handler
                             >
                             <i className="align-middle" data-feather="trash"></i> Delete
                             </button>

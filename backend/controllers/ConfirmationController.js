@@ -165,8 +165,8 @@ const sendConfirmation = async (req, res) => {
 
 const createConfirmation = async (req, res) => {
     try {
-        const { message, status } = req.body;
-        const confirmation = await Confirmation.create({ message, status });
+        const { message, pembuka } = req.body;
+        const confirmation = await Confirmation.create({ message, pembuka });
         res.status(201).json(confirmation);
     } catch (error) {
         console.error(error);

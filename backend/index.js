@@ -4,6 +4,7 @@ const loginRoute = require("./routes/LoginRoute.js");
 const dosenRoute = require("./routes/DosenRoute.js");
 const jadwalRoute = require("./routes/JadwalRoute.js");
 const confirmationRoute = require('./routes/ConfirmationRoute.js');
+const reminderRoute = require('./routes/ReminderRoute.js');
 const authenticationRoutes = require('./routes/AuthenticationWBMRoute');
 const cors = require('cors');
 require('./controllers/ReminderController.js');
@@ -19,5 +20,6 @@ app.use(dosenRoute);
 app.use(jadwalRoute);
 app.use(confirmationRoute);
 app.use(authenticationRoutes);
+app.use(reminderRoute);
 
 app.listen(5000, () => console.log('Server Up and Running...'));

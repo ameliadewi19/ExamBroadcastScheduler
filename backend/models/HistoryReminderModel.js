@@ -24,6 +24,10 @@ const HistoryReminder = sequelize.define("HistoryReminder", {
         type: DataTypes.DATE,
         allowNull: false,
     },
+    jenis_reminder: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
 }, {
     freezeTableName: true, // This option prevents Sequelize from pluralizing the table name
     timestamps: false, // Include createdAt and updatedAt columns

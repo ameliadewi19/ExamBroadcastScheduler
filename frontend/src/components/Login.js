@@ -26,7 +26,15 @@ function Login() {
         password,
       });
       
+      const token = response.data.accessToken;
+      
+      localStorage.setItem('jwt_token', token);
+
+      console.log("token:", token);
+
+      // If login is successful, redirect to the dashboard
       console.log('Login berhasil', response.data);
+      history('/dashboard'); // Use navigate to redirect to the dashboard route
     } catch (err) {
       setError('Login gagal. Username atau password salah.');
     }

@@ -2,17 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import feather from 'feather-icons';
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
     useEffect(() => {
         feather.replace(); // Replace the icons after component mounts
     }, []);
 
+	function handleLogout() {
+		// Melakukan permintaan logout ke server
+		axios.delete('http://localhost:5000/logout')
+		.then((response) => {
+			console.log('Logout berhasil', response.data);
+
+			// Jika logout berhasil, Anda dapat menghapus token dari penyimpanan di sisi klien
+			localStorage.removeItem('jwt_token');
+			Cookies.remove('jwt_token');
+			// Redirect ke halaman login
+			window.location.href = '/';
+	  
+			// Anda juga dapat mengarahkan pengguna ke halaman login atau melakukan tindakan lain yang sesuai.
+		  })
+		  .catch((error) => {
+			// Handle kesalahan jika logout gagal
+			console.error('Logout gagal', error);
+		  });
+	  }
+
     return (
         <nav className="navbar navbar-expand navbar-light navbar-bg">
             <a className="sidebar-toggle js-sidebar-toggle">
                 <i className="hamburger align-self-center"></i>
             </a>
+
+			<a className="dropdown-item" onClick={handleLogout}>Log out</a>
 
             <div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
@@ -163,7 +186,7 @@ const Navbar = () => {
 								<a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
 								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Log out</a>
+								<a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
 							</div>
 						</li>
 					</ul>

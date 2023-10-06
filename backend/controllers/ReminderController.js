@@ -2,12 +2,13 @@ const cron = require('node-cron');
 const wbm = require('wbm');
 const axios = require('axios');
 const { format } = require('date-fns');
+const HistoryReminder = require('../models/HistoryReminderModel.js');
 
 const MAX_MESSAGES_PER_INTERVAL = 10;
 const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 
 //Task send H-1
-cron.schedule('36 13 * * *', async () => {
+cron.schedule('0 12 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -66,9 +67,27 @@ cron.schedule('36 13 * * *', async () => {
                 if (reminders.length > 0) {
                     // Join the reminders into a single message
                     const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas besok :\n\n${reminders.join('\n\n')}`;
+                    let status = '';
+                    try {
+                        await wbm.send([contact], message);
+
+                        // Jika pengiriman pesan berhasil, set status ke "Sent"
+                        status = "Sent";
+                    } catch (error) {
+                        console.error(error);
         
-                    await wbm.send([contact], message);
-                    const timeoutMillis = 15000;
+                        // Jika pengiriman pesan gagal, set status ke "Failed"
+                        status = "Failed";
+                    }
+                    
+                    const historyRecord = {
+                        nama: contact.name,
+                        phone: contact.phone,
+                        status: status,
+                        timestamp: new Date(),
+                    };
+                    await HistoryReminder.create(historyRecord);
+                    const timeoutMillis = 3000;
                     await new Promise(resolve => setTimeout(resolve, timeoutMillis));
                 }
                 contactCounter++;
@@ -91,7 +110,7 @@ cron.schedule('36 13 * * *', async () => {
 });
 
 //Task send D-Day
-cron.schedule('56 13 * * *', async () => {
+cron.schedule('41 13 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;

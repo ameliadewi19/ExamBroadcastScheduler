@@ -38,30 +38,28 @@ const AddConfirmationModal = ({ reloadData }) => {
           </div>
           <div className="modal-body">
             <form>
-              <div className="mb-3">
-                <label htmlFor="pembuka" className="form-label">Kalimat Pembuka</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="pembuka"
-                  name="pembuka"
-                  value={formData.pembuka}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="message" className="form-label">Jadwal</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                />
-              </div>
-              
-            </form>
+                <div className="mb-3">
+                    <label htmlFor="pembuka" className="form-label">Kalimat Pembuka</label>
+                    <textarea
+                    className="form-control"
+                    id="pembuka"
+                    name="pembuka"
+                    value={formData.pembuka}
+                    onChange={handleInputChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="message" className="form-label">Jadwal</label>
+                    <textarea
+                    className="form-control"
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    />
+                </div>
+                </form>
+
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>

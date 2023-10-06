@@ -2,12 +2,13 @@ const cron = require('node-cron');
 const wbm = require('wbm');
 const axios = require('axios');
 const { format } = require('date-fns');
+const HistoryReminder = require('../models/HistoryReminderModel.js');
 
 const MAX_MESSAGES_PER_INTERVAL = 10;
 const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 
 //Task send H-1
-cron.schedule('36 13 * * *', async () => {
+cron.schedule('0 17 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -66,9 +67,31 @@ cron.schedule('36 13 * * *', async () => {
                 if (reminders.length > 0) {
                     // Join the reminders into a single message
                     const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas besok :\n\n${reminders.join('\n\n')}`;
+                    let status = '';
+                    try {
+                        await wbm.send([contact], message);
+
+                        // Jika pengiriman pesan berhasil, set status ke "Sent"
+                        status = "Sent";
+                    } catch (error) {
+                        console.error(error);
         
-                    await wbm.send([contact], message);
-                    const timeoutMillis = 15000;
+                        // Jika pengiriman pesan gagal, set status ke "Failed"
+                        status = "Failed";
+                    }
+                    const now = new Date();
+                    const localTimestamp = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })); // Konversi ke zona waktu lokal
+                    const utcTimestamp = new Date(localTimestamp.getTime() - (localTimestamp.getTimezoneOffset() * 60000)); // Konversi ke zona waktu UTC
+                    const formattedLocalTimestamp = localTimestamp.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+                    const historyRecord = {
+                        nama: contact.name,
+                        phone: contact.phone,
+                        status: status,
+                        timestamp: utcTimestamp.toISOString(),
+                        jenis_reminder: "H-1"
+                    };
+                    await HistoryReminder.create(historyRecord);
+                    const timeoutMillis = 10000;
                     await new Promise(resolve => setTimeout(resolve, timeoutMillis));
                 }
                 contactCounter++;
@@ -91,7 +114,7 @@ cron.schedule('36 13 * * *', async () => {
 });
 
 //Task send D-Day
-cron.schedule('56 13 * * *', async () => {
+cron.schedule('0 5 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -147,8 +170,30 @@ cron.schedule('56 13 * * *', async () => {
                 if (reminders.length > 0) {
                     // Join the reminders into a single message
                     const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas hari ini :\n\n${reminders.join('\n\n')}`;
+                    let status = '';
+                    try {
+                        await wbm.send([contact], message);
+
+                        // Jika pengiriman pesan berhasil, set status ke "Sent"
+                        status = "Sent";
+                    } catch (error) {
+                        console.error(error);
         
-                    await wbm.send([contact], message);
+                        // Jika pengiriman pesan gagal, set status ke "Failed"
+                        status = "Failed";
+                    }
+                    const now = new Date();
+                    const localTimestamp = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })); // Konversi ke zona waktu lokal
+                    const utcTimestamp = new Date(localTimestamp.getTime() - (localTimestamp.getTimezoneOffset() * 60000)); // Konversi ke zona waktu UTC
+                    const formattedLocalTimestamp = localTimestamp.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+                    const historyRecord = {
+                        nama: contact.name,
+                        phone: contact.phone,
+                        status: status,
+                        timestamp: utcTimestamp.toISOString(),
+                        jenis_reminder: "D-Day"
+                    };
+                    await HistoryReminder.create(historyRecord);
                     const timeoutMillis = 15000;
                     await new Promise(resolve => setTimeout(resolve, timeoutMillis));
                 }
@@ -170,3 +215,17 @@ cron.schedule('56 13 * * *', async () => {
         console.error(error);
     }
 });
+
+const getHistory = async (req, res) => {
+    try {
+        const histories = await HistoryReminder.findAll();
+        res.status(200).json(histories);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+module.exports = {
+    getHistory,
+};

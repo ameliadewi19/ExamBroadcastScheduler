@@ -35,7 +35,8 @@ const getUjian = async (req, res) => {
       JOIN
         "Dosen" dosen_ujian ON jadwal.id_dosen = dosen_ujian.id_dosen
       JOIN
-        "Dosen" dosen_pengawas ON jadwal.id_pengawas = dosen_pengawas.id_dosen;
+        "Dosen" dosen_pengawas ON jadwal.id_pengawas = dosen_pengawas.id_dosen
+      ORDER BY jadwal.id_ujian ASC;
     `;
 
     const results = await sequelize.query(query, { type: Sequelize.QueryTypes.SELECT });

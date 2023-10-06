@@ -3,11 +3,18 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 import AddConfirmationModal from './AddConfirmationModal';
+import EditConfirmationModal from './EditConfirmationModal';
 
 // Using Arrow Function
 const Confirmation = () => {
   const location = useLocation();
   const [confirmationData, setConfirmationData] = useState([]); // State to store the fetched data
+
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const handleEdit = (id) => {
+    setSelectedItemId(id);
+  };
 
   useEffect(() => {
     fetchConfirmationData(); // Fetch data when the component mounts
@@ -17,7 +24,9 @@ const Confirmation = () => {
   const fetchConfirmationData = () => {
     axios.get('http://localhost:5000/confirmations')
       .then(response => {
-        setConfirmationData(response.data);
+        // Sort the data by ID in ascending order
+        const sortedData = response.data.sort((a, b) => a.id - b.id);
+        setConfirmationData(sortedData);
       })
       .catch(error => {
         console.error(error);
@@ -61,13 +70,6 @@ const Confirmation = () => {
             <div className="card">
               <div className="card-header">
                 <h5 className="card-title">Tambah Data</h5>
-                {/* <button
-                    className="btn btn-primary mt-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addConfirmationModal"
-                  >
-                    <i className="align-middle" data-feather="plus"></i> Tambah Data
-                </button>       */}
                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addConfirmationModal">
                   <i className="" data-feather="plus"></i>
                    Add Confirmation Template
@@ -91,9 +93,14 @@ const Confirmation = () => {
                           <td>{item.pembuka}</td>
                           <td>{item.message}</td>
                           <td>
-                            <button className="btn btn-primary mt-2" style={{ marginRight: '5px' }}>
-                              <i className="align-middle" data-feather="edit"></i> Edit
+                            <button type="button" className="btn btn-primary" onClick={() => handleEdit(item.id)} data-bs-toggle="modal" data-bs-target="#editConfirmationModal">
+                              <i className="" data-feather="edit"></i>
+                              Edit
                             </button>
+                            <EditConfirmationModal
+                                id={selectedItemId}
+                                reloadData={fetchConfirmationData}
+                              />
                             <button
                             className="btn btn-danger mt-2" onClick={() => handleDelete(item.id)} // Pass the id to the handler
                             >

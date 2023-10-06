@@ -24,15 +24,15 @@ Content-Type: application/json
 }
 
 ### 
-PATCH http://localhost:5000/dosen/1 
-# Content-Type: application/json
+PATCH http://localhost:5000/dosen/3
+Content-Type: application/json
 
-# {
-# "nip": "1234567890123456789", 
-# "nidn": "98765432122",
-# "nama": "Dosen baru",
-# "no_whatsapp": "089657109999"
-# }
+{
+"nip": "1234567890123456789", 
+"nidn": "98765432122",
+"nama": "Dosen baru",
+"no_whatsapp": "089657109999"
+}
 
 ###
 DELETE http://localhost:5000/dosen/2

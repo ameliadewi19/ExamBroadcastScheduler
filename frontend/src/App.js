@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import Sidebar from './components/Sidebar.js';
@@ -12,113 +12,104 @@ import Dosen from './components/Dosen.js';
 import JadwalUjian from './components/JadwalUjian.js';
 import Reminder from './components/Reminder.js';
 
-// Contoh fungsi untuk memeriksa JWT (ini hanya contoh, sebaiknya digantikan dengan logika sesuai aplikasi Anda).
-function checkAuthorization() {
-  // Dapatkan token JWT dari penyimpanan lokal (localStorage, sessionStorage, dll.)
-  const token = localStorage.getItem('jwt_token');
-
-  console.log("token lokal:", token);
-
-  // Jika token tidak ada atau telah kedaluwarsa, kembalikan false
-  if (!token) {
-    return false;
-  }
-
-  // Anda juga dapat memeriksa apakah token masih valid dengan mengirimkannya ke server
-  // dan memeriksa tanggapan dari server.
-  // Misalnya, jika server mengembalikan status 200, Anda dapat menganggap token valid.
-
-  // Jika token valid, kembalikan true; jika tidak, kembalikan false.
-  // Misalnya:
-  // if (response.status === 200) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
-  
-  // Contoh sederhana: Selalu mengembalikan true untuk simulasi pengujian.
-  return true;
-}
-
-function ProtectedRoute({ children }) {
-  const location = useLocation();
-
-  // Ganti ini dengan logika pemeriksaan JWT yang sesuai dengan aplikasi Anda.
-  const userHasAuthorization = checkAuthorization(); // Misalnya, fungsi ini memeriksa JWT.
-
-  if (!userHasAuthorization) {
-    return <Navigate to={`/`} />;
-  }
-
-  return children;
-}
-
 function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <>
-            <Login />
-          </>
-        }/>
-        
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
+        <Route
+          path="/"
+          element={
+            <>
+              <Login />
+            </>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
             <div className="wrapper">
-              <Sidebar />
+              <nav id="sidebar" className={`${sidebarOpen ? 'sidebar js-sidebar' : 'sidebar js-sidebar collapsed'}`}>
+                <Sidebar />
+              </nav>
               <div className="main">
-                <Navbar />
-                <Dashboard />
+                  <Navbar toggleSidebar={toggleSidebar} />
+                  <Dashboard />
+                  <Footer />
+              </div>
+              
+            </div>
+          }
+        />
+        <Route
+          path="/dosen"
+          element={
+            <div className="wrapper">
+              <nav id="sidebar" className={`${sidebarOpen ? 'sidebar js-sidebar' : 'sidebar js-sidebar collapsed'}`}>
+                <Sidebar />
+              </nav>
+              <div className="main">
+                <Navbar toggleSidebar={toggleSidebar} />
+                <Dosen />
                 <Footer />
               </div>
             </div>
-          </ProtectedRoute>
-        }/>
-        <Route path="/dosen" element={
-          <div className="wrapper">
-            <Sidebar />
-            <div className="main">
-              <Navbar />
-              <Dosen />
-              <Footer />
+          }
+        />
+        <Route
+          path="/jadwal-ujian"
+          element={
+            <div className="wrapper">
+              <nav id="sidebar" className={`${sidebarOpen ? 'sidebar js-sidebar' : 'sidebar js-sidebar collapsed'}`}>
+                <Sidebar />
+              </nav>
+              <div className="main">
+                <Navbar toggleSidebar={toggleSidebar} />
+                <JadwalUjian />
+                <Footer />
+              </div>
             </div>
-          </div>
-        }/>
-        <Route path="/jadwal-ujian" element={
-          <div className="wrapper">
-            <Sidebar />
-            <div className="main">
-              <Navbar />
-              <JadwalUjian />
-              <Footer />
+          }
+        />
+        <Route
+          path="/confirmation"
+          element={
+            <div className="wrapper">
+              <nav id="sidebar" className={`${sidebarOpen ? 'sidebar js-sidebar' : 'sidebar js-sidebar  collapsed'}`}>
+                <Sidebar />
+              </nav>
+              <div className="main">
+                <Navbar toggleSidebar={toggleSidebar} />
+                <Confirmation />
+                <Footer />
+              </div>
             </div>
-          </div>
-        }/>
-        <Route path="/confirmation" element={
-          <div className="wrapper">
-            <Sidebar />
-            <div className="main">
-              <Navbar />
-              <Confirmation />
-              <Footer />
+          }
+        />
+        <Route
+          path="/reminder"
+          element={
+            <div className="wrapper">
+              <nav id="sidebar" className={`${sidebarOpen ? 'sidebar js-sidebar' : 'sidebar js-sidebar collapsed'}`}>
+                <Sidebar />
+              </nav>
+              <div className="main">
+                <Navbar toggleSidebar={toggleSidebar} />
+                <Reminder />
+                <Footer />
+              </div>
             </div>
-          </div>
-        }/>
-        <Route path="/reminder" element={
-          <div className="wrapper">
-            <Sidebar />
-            <div className="main">
-              <Navbar />
-              <Reminder />
-              <Footer />
-            </div>
-          </div>
-        }/>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App; 
+export default App;
 

@@ -64,7 +64,7 @@ const Confirmation = () => {
   return (
     <main className="content">
       <div className="container-fluid p-0">
-        <h1 className="h3 mb-3"><strong>Confirmation Message</strong></h1>
+        <h1 className="h3 mb-3"><strong>Confirmation </strong>Message</h1>
         <div className="row">
           <div className="col-xl-12">
             <div className="card">
@@ -84,6 +84,7 @@ const Confirmation = () => {
                         <th>Id Template</th>
                         <th>Pembuka</th>
                         <th>Isi</th>
+                        <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>

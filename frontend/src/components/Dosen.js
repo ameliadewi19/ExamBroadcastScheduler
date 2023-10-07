@@ -171,8 +171,8 @@ const Dosen = () => {
                         <th>Nama</th>
                         <th>NIP</th>
                         <th>NIDN</th>
-                        <th>NO WHATSAPP</th>
-                        <th>Action</th>
+                        <th>No Whatsapp</th>
+                        <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -231,7 +231,7 @@ const Dosen = () => {
                 <Form.Control type="text" name="nidn" value={formData.nidn} onChange={handleChange} placeholder='NIDN Dosen'/>
               </Form.Group>
               <Form.Group controlId="no_whatsapp">
-                <Form.Label>NO WHATSAPP</Form.Label>
+                <Form.Label>No Whatsapp</Form.Label>
                 <Form.Control
                   type="text"
                   name="no_whatsapp"

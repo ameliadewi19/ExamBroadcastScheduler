@@ -128,7 +128,7 @@ const JadwalUjian = () => {
   return (
     <main className="content">
       <div className="container-fluid p-0">
-        <h1 className="h3 mb-3"><strong>Jadwal Ujian</strong></h1>
+        <h1 className="h3 mb-3"><strong>Jadwal </strong>Ujian</h1>
         <div className="row">
           <div className="col-xl-12">
             <div className="card">
@@ -162,6 +162,7 @@ const JadwalUjian = () => {
                         <th>Kelas</th>
                         <th>Ruangan</th>
                         <th>Nama Pengawas</th>
+                        <th>Aksi</th>
                       </tr>
                     </thead>
                     <tbody>

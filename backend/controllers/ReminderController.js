@@ -2,13 +2,14 @@ const cron = require('node-cron');
 const wbm = require('wbm');
 const axios = require('axios');
 const { format } = require('date-fns');
+const Reminder = require('../models/ReminderModel.js');
 const HistoryReminder = require('../models/HistoryReminderModel.js');
 
 const MAX_MESSAGES_PER_INTERVAL = 10;
 const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 
 //Task send H-1
-cron.schedule('0 17 * * *', async () => {
+cron.schedule('41 21 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -46,6 +47,13 @@ cron.schedule('0 17 * * *', async () => {
         
         const uniqueContacts = Object.values(groupedContacts);
 
+        const template = await Reminder.findByPk(1);
+
+        if (!template) {
+            res.status(404).json({ message: 'Template not found' });
+            return;
+        }
+
         await wbm.start({ showBrowser: true });
 
         let contactCounter = 0;
@@ -59,14 +67,22 @@ cron.schedule('0 17 * * *', async () => {
                 const reminders = [];
                 for (const data of filteredDatas) {
                     if (data.no_whatsapp_dosen_pengawas === contact.phone) {
-                        const reminderMessage = `${formatedTgl} pukul ${data.waktu_mulai} - ${data.waktu_selesai} untuk mata kuliah ${data.nama_matakuliah} ${data.jenis_matakuliah} kelas ${data.kelas} di ruangan ${data.ruangan}.`;
+                        const reminderMessage = template.message
+                            .replace('{nama}', contact.name)
+                            .replace('{tanggal}', formatedTgl)
+                            .replace('{waktu_mulai}', data.waktu_mulai)
+                            .replace('{waktu_selesai}', data.waktu_selesai)
+                            .replace('{nama_matakuliah}', data.nama_matakuliah)
+                            .replace('{jenis_matakuliah}', data.jenis_matakuliah)
+                            .replace('{kelas}', data.kelas)
+                            .replace('{ruangan}', data.ruangan);
                         reminders.push(reminderMessage);
                     }
                 }
 
                 if (reminders.length > 0) {
                     // Join the reminders into a single message
-                    const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas besok :\n\n${reminders.join('\n\n')}`;
+                    const message = `${template.pembuka.replace('{nama}', contact.name)}\n\n${reminders.join('\n\n')}`;
                     let status = '';
                     try {
                         await wbm.send([contact], message);
@@ -91,7 +107,7 @@ cron.schedule('0 17 * * *', async () => {
                         jenis_reminder: "H-1"
                     };
                     await HistoryReminder.create(historyRecord);
-                    const timeoutMillis = 10000;
+                    const timeoutMillis = 15000;
                     await new Promise(resolve => setTimeout(resolve, timeoutMillis));
                 }
                 contactCounter++;
@@ -114,7 +130,7 @@ cron.schedule('0 17 * * *', async () => {
 });
 
 //Task send D-Day
-cron.schedule('0 5 * * *', async () => {
+cron.schedule('48 21 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -149,6 +165,13 @@ cron.schedule('0 5 * * *', async () => {
         
         const uniqueContacts = Object.values(groupedContacts);
 
+        const template = await Reminder.findByPk(2);
+
+        if (!template) {
+            res.status(404).json({ message: 'Template not found' });
+            return;
+        }
+
         await wbm.start({ showBrowser: true });
 
         let contactCounter = 0;
@@ -162,14 +185,22 @@ cron.schedule('0 5 * * *', async () => {
                 const reminders = [];
                 for (const data of filteredDatas) {
                     if (data.no_whatsapp_dosen_pengawas === contact.phone) {
-                        const reminderMessage = `${formatedTgl} pukul ${data.waktu_mulai} - ${data.waktu_selesai} untuk mata kuliah ${data.nama_matakuliah} ${data.jenis_matakuliah} kelas ${data.kelas} di ruangan ${data.ruangan}.`;
+                        const reminderMessage = template.message
+                            .replace('{nama}', contact.name)
+                            .replace('{tanggal}', formatedTgl)
+                            .replace('{waktu_mulai}', data.waktu_mulai)
+                            .replace('{waktu_selesai}', data.waktu_selesai)
+                            .replace('{nama_matakuliah}', data.nama_matakuliah)
+                            .replace('{jenis_matakuliah}', data.jenis_matakuliah)
+                            .replace('{kelas}', data.kelas)
+                            .replace('{ruangan}', data.ruangan);
                         reminders.push(reminderMessage);
                     }
                 }
 
                 if (reminders.length > 0) {
                     // Join the reminders into a single message
-                    const message = `Halo Bapak/Ibu ${contact.name}, mengingatkan jadwal mengawas hari ini :\n\n${reminders.join('\n\n')}`;
+                    const message = `${template.pembuka.replace('{nama}', contact.name)}\n\n${reminders.join('\n\n')}`;
                     let status = '';
                     try {
                         await wbm.send([contact], message);
@@ -216,10 +247,63 @@ cron.schedule('0 5 * * *', async () => {
     }
 });
 
-const getHistory = async (req, res) => {
+async function getReminders(req, res, next) {
+    try {
+        const reminders = await Reminder.findAll();
+        req.reminders = reminders;
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const getReminderById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const reminder = await Reminder.findByPk(id);
+        if (!reminder) {
+            res.status(404).json({ message: 'Reminder Template not found' });
+        } else {
+            res.status(200).json(reminder);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+async function getHistory(req, res, next){
     try {
         const histories = await HistoryReminder.findAll();
-        res.status(200).json(histories);
+        req.histories = histories;
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+function sendDataToClient(req, res) {
+    const reminders = req.reminders;
+    const histories = req.histories;
+  
+    // Send both sets of data as a JSON response to the client
+    res.json({ reminders, histories });
+}
+
+const updateReminder = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [updated] = await Reminder.update(req.body, {
+            where: { id }
+        });
+        if (updated) {
+            const updatedReminder = await Reminder.findByPk(id);
+            res.status(200).json(updatedReminder);
+        } else {
+            res.status(404).json({ message: 'Reminder Template not found' });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -227,5 +311,9 @@ const getHistory = async (req, res) => {
 };
 
 module.exports = {
+    getReminders,
+    getReminderById,
     getHistory,
+    sendDataToClient,
+    updateReminder
 };

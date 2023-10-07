@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
     const location = useLocation();
     
     useEffect(() => {
@@ -11,8 +11,8 @@ const Sidebar = () => {
     }, []);
 
     return (
-        <nav id="sidebar" className="sidebar js-sidebar">
-            <div className="sidebar-content js-simplebar">
+        // <nav id="sidebar" className="sidebar js-sidebar">
+            <div className="sidebar-content js-simplebar" >
                 <a className="sidebar-brand" href="/dashboard">
                     <span className="align-middle">ExamBroadcastMessage</span>
                 </a>
@@ -53,7 +53,7 @@ const Sidebar = () => {
                     </li>
                 </ul>
             </div>
-        </nav>
+        // </nav>
     );
 };
 

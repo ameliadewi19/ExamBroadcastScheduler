@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.get('/dosen', verifyToken,getDosen);
+router.get('/dosen', getDosen);
 router.get('/dosen/:id', getDosenById);
 router.post('/dosen', createDosen);
 router.patch('/dosen/:id', updateDosen);

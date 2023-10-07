@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ### 
-PATCH http://localhost:5000/dosen/3
+PATCH http://localhost:5000/dosen/7
 Content-Type: application/json
 
 {

@@ -13,7 +13,7 @@ const getAdmin = async(req, res) =>{
 
 const login = async (req, res) => {
   console.log("Username yang dicari:", req.body.username);
-  try {
+//   try {
       const admin = await Admin.findOne({
           where: {
               username: req.body.username
@@ -43,9 +43,9 @@ const login = async (req, res) => {
       });
 
       res.json({ accessToken });
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
+//   } catch (error) {
+//       res.status(500).json({ error: error.message });
+//   }
 }
   
 

@@ -27,7 +27,7 @@ const Navbar = () => {
 			// Handle kesalahan jika logout gagal
 			console.error('Logout gagal', error);
 		  });
-	  }
+	}
 
     return (
         <nav className="navbar navbar-expand navbar-light navbar-bg">

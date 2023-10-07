@@ -1,9 +1,9 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config(); // Load environment variables from .env file
 
-// Configure the Sequelize instance
-const sequelize = new Sequelize('exam_bm_scheduler', 'postgres', '12345', {
-    host: 'localhost',
-    dialect: 'postgres', // Use the appropriate dialect for PostgreSQL
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
 });
 
 // Export the configured Sequelize instance

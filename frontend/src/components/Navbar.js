@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import feather from 'feather-icons';
-import Cookies from 'js-cookie';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import feather from "feather-icons";
+import Cookies from "js-cookie";
 
 const Navbar = ({ toggleSidebar }) => {
-    useEffect(() => {
-        feather.replace(); // Replace the icons after component mounts
-    }, []);
+  useEffect(() => {
+    feather.replace(); // Replace the icons after component mounts
+  }, []);
 
-	function handleLogout() {
-		// Melakukan permintaan logout ke server
-		axios.delete('http://localhost:5000/logout')
-		.then((response) => {
-			console.log('Logout berhasil', response.data);
+  function handleLogout() {
+    // Melakukan permintaan logout ke server
+    axios
+      .delete("http://localhost:5000/logout")
+      .then((response) => {
+        console.log("Logout berhasil", response.data);
 
-			// Jika logout berhasil, Anda dapat menghapus token dari penyimpanan di sisi klien
-			localStorage.removeItem('jwt_token');
-			Cookies.remove('jwt_token');
-			// Redirect ke halaman login
-			window.location.href = '/';
-	  
-			// Anda juga dapat mengarahkan pengguna ke halaman login atau melakukan tindakan lain yang sesuai.
-		  })
-		  .catch((error) => {
-			// Handle kesalahan jika logout gagal
-			console.error('Logout gagal', error);
-		  });
-	}
+        // Jika logout berhasil, Anda dapat menghapus token dari penyimpanan di sisi klien
+        localStorage.removeItem("jwt_token");
+        Cookies.remove("jwt_token");
+        // Redirect ke halaman login
+        window.location.href = "/";
 
-    return (
-        <nav className="navbar navbar-expand navbar-light navbar-bg">
-            <a className="sidebar-toggle d-flex mr-2" onClick={() => toggleSidebar()}>
-				<i className="hamburger align-self-center"></i>
-			</a>
-            <div className="navbar-collapse collapse">
-					<ul className="navbar-nav navbar-align">
-						{/* <li className="nav-item dropdown">
+        // Anda juga dapat mengarahkan pengguna ke halaman login atau melakukan tindakan lain yang sesuai.
+      })
+      .catch((error) => {
+        // Handle kesalahan jika logout gagal
+        console.error("Logout gagal", error);
+      });
+  }
+
+  return (
+    <nav className="navbar navbar-expand navbar-light navbar-bg">
+      <a className="sidebar-toggle d-flex mr-2" onClick={() => toggleSidebar()}>
+        <i className="hamburger align-self-center"></i>
+      </a>
+      <div className="navbar-collapse collapse">
+        <ul className="navbar-nav navbar-align">
+          {/* <li className="nav-item dropdown">
 							<a className="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 								<div className="position-relative">
 									<i className="align-middle" data-feather="bell"></i>
@@ -168,28 +169,45 @@ const Navbar = ({ toggleSidebar }) => {
 								</div>
 							</div>
 						</li> */}
-						<li className="nav-item dropdown">
-							<a className="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-                <i className="align-middle" data-feather="settings"></i>
-              </a>
+          <li className="nav-item dropdown">
+            <a
+              className="nav-icon dropdown-toggle d-inline-block d-sm-none"
+              href="#"
+              data-bs-toggle="dropdown"
+            >
+              <i className="align-middle" data-feather="settings"></i>
+            </a>
 
-							<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                <img src="img/avatars/avatar.jpg" className="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span className="text-dark"><i className="align-middle me-1" data-feather="user"></i>Admin</span>
-              </a>
-							<div className="dropdown-menu dropdown-menu-end">
-								{/* <a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
+            <a
+              className="nav-link dropdown-toggle d-none d-sm-inline-block"
+              href="#"
+              data-bs-toggle="dropdown"
+            >
+              <img
+                src="img/avatars/avatar.jpg"
+                className="avatar img-fluid rounded me-1"
+                alt="Charles Hall"
+              />{" "}
+              <span className="text-dark">
+                <i className="align-middle me-1" data-feather="user"></i>Admin
+              </span>
+            </a>
+            <div className="dropdown-menu dropdown-menu-end">
+              {/* <a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
 								<a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
 								<div className="dropdown-divider"></div>
 								<a className="dropdown-item" href="index.html"><i className="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
 								<a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 								<div className="dropdown-divider"></div> */}
-								<a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
-							</div>
-						</li>
-					</ul>
-				</div>
-        </nav>
-    );
+              <a className="dropdown-item" href="#" onClick={handleLogout}>
+                Log out
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;

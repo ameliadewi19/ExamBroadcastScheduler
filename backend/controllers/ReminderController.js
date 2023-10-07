@@ -9,7 +9,7 @@ const MAX_MESSAGES_PER_INTERVAL = 10;
 const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 
 //Task send H-1
-cron.schedule('41 21 * * *', async () => {
+cron.schedule('0 17 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
@@ -130,7 +130,7 @@ cron.schedule('41 21 * * *', async () => {
 });
 
 //Task send D-Day
-cron.schedule('48 21 * * *', async () => {
+cron.schedule('0 5 * * *', async () => {
     try {
         const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;

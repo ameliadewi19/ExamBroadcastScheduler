@@ -179,10 +179,10 @@ const JadwalUjian = () => {
                           <td>{item.nama_dosen_pengawas}</td>
                           <td>
                             <button className="btn btn-primary mt-2" style={{ marginRight: '5px' }} onClick={() => handleEdit(item)}>
-                              <i className="align-middle" data-feather="edit">Edit</i>
+                              <i className="align-middle" data-feather="edit"></i>Edit
                             </button>
                             <button className="btn btn-danger mt-2" onClick={() => handleDelete(item.id_ujian)}>
-                              <i className="align-middle" data-feather="trash">Hapus</i>
+                              <i className="align-middle" data-feather="trash"></i>Hapus
                             </button>
                           </td>
                         </tr>

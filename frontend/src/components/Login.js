@@ -26,7 +26,15 @@ function Login() {
         password,
       });
       
+      const token = response.data.accessToken;
+      
+      localStorage.setItem('jwt_token', token);
+
+      console.log("token:", token);
+
+      // If login is successful, redirect to the dashboard
       console.log('Login berhasil', response.data);
+      history('/dashboard'); // Use navigate to redirect to the dashboard route
     } catch (err) {
       setError('Login gagal. Username atau password salah.');
     }
@@ -39,7 +47,7 @@ function Login() {
           <div className="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
             <div className="d-table-cell align-middle">
               <div className="text-center mt-4">
-                <h1 className="h2">Welcome back!</h1>
+                <h1 className="h2">EXAM BROADCAST SCHEDULE</h1>
                 <p className="lead">
                   Sign in to your account to continue
                 </p>

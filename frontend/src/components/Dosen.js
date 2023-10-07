@@ -2,21 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
-import './createDosen.css'
+import './createDosen.css';
 
 const Dosen = () => {
   const [dosenData, setDosenData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [editModal, setEditModal] = useState(false); // Tambahkan state untuk modal edit
   const [formData, setFormData] = useState({
-    nama: '',
-    nip: '',
-    nidn: '',
-    no_whatsapp: '',
-  });
-
-  const [editFormData, setEditFormData] = useState({ // Tambahkan state untuk data yang akan diedit
-    id: null,
     nama: '',
     nip: '',
     nidn: '',
@@ -53,121 +44,56 @@ const Dosen = () => {
     }
   };
 
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  const handleShowEditModal = (dosen) => { // Menampilkan modal edit dengan data dosen yang akan diedit
-    setEditModal(true);
-    setEditFormData({
-      id: dosen.id_dosen,
-      nama: dosen.nama,
-      nip: dosen.nip,
-      nidn: dosen.nidn,
-      no_whatsapp: dosen.no_whatsapp,
-    });
-  };
-
-  const handleCloseEditModal = () => {
-    setEditModal(false);
-    setEditFormData({
-      id: null,
-      nama: '',
-      nip: '',
-      nidn: '',
-      no_whatsapp: '',
-    });
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
+  
+    // Validasi Nama: Hanya huruf diizinkan
+    if (name === "nama" && /[^a-zA-Z\s]/.test(value)) {
+      alert("Nama hanya boleh mengandung huruf.");
+      return;
+    }
+  
+    // Validasi NIP: Hanya angka diizinkan
+    if (name === "nip" && /[^0-9]/.test(value)) {
+      alert("NIP hanya boleh mengandung angka.");
+      return;
+    }
+  
+    // Validasi NIDN: Hanya angka diizinkan
+    if (name === "nidn" && /[^0-9]/.test(value)) {
+      alert("NIDN hanya boleh mengandung angka.");
+      return;
+    }
+  
+    // Validasi NO WHATSAPP: Hanya angka diizinkan
+    if (name === "no_whatsapp" && /[^0-9]/.test(value)) {
+      alert("NO WHATSAPP hanya boleh mengandung angka.");
+      return;
+    }
+  
     setFormData({
       ...formData,
       [name]: value,
     });
   };
+  
 
-  const handleEditChange = (e) => { // Handle perubahan data pada form edit
-    const { name, value } = e.target;
-    setEditFormData({
-      ...editFormData,
-      [name]: value,
-    });
-  };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     await axios.post('http://localhost:5000/dosen', formData, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     fetchDosenData();
-  //     handleCloseModal();
-  //   } catch (error) {
-  //     console.error('Error saving data:', error);
-  //   }
-  // };
-
-  const handleEditSubmit = async () => { // Handle penyimpanan perubahan data
+  const handleSubmit = async () => {
     try {
-      await axios.patch(`http://localhost:5000/dosen/${editFormData.id}`, editFormData, {
+      await axios.post('http://localhost:5000/dosen', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      fetchDosenData();
-      handleCloseEditModal();
-    } catch (error) {
-      console.error('Error saving data:', error);
-    }
-  };
-
-  const [isEditing, setIsEditing] = useState(false); // State untuk menentukan apakah dalam mode edit atau tambah
-
-  const handleShowModal = (editMode = false, dosenData = null) => {
-    setIsEditing(editMode); // Set isEditing sesuai dengan editMode yang diterima
-    setShowModal(true);
-
-    // Jika dalam mode edit, isi form dengan data dosen yang akan diedit
-    if (editMode && dosenData) {
-      setEditFormData({
-        id: dosenData.id_dosen,
-        nama: dosenData.nama,
-        nip: dosenData.nip,
-        nidn: dosenData.nidn,
-        no_whatsapp: dosenData.no_whatsapp,
-      });
-    } else {
-      // Jika dalam mode tambah, reset form
-      setEditFormData({
-        id: null,
-        nama: '',
-        nip: '',
-        nidn: '',
-        no_whatsapp: '',
-      });
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      if (isEditing) {
-        // Jika dalam mode edit, kirim permintaan PATCH untuk mengubah data
-        await axios.patch(`http://localhost:5000/dosen/${editFormData.id}`, editFormData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-      } else {
-        // Jika dalam mode tambah, kirim permintaan POST untuk menambahkan data
-        await axios.post('http://localhost:5000/dosen', editFormData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-      }
       fetchDosenData();
       handleCloseModal();
     } catch (error) {
@@ -186,7 +112,7 @@ const Dosen = () => {
             <div className="card">
               <div className="card-header">
                 <h5 className="card-title">Tambah Data</h5>
-                <button className="btn btn-primary mt-2" onClick={() => handleShowModal(false)}>
+                <button className="btn btn-primary mt-2" onClick={handleShowModal}>
                   Tambah Dosen
                 </button>
               </div>
@@ -215,14 +141,15 @@ const Dosen = () => {
                           <td>{dosen.no_whatsapp}</td>
                           <td>
                             <Link>
-                            <button onClick={() => handleShowEditModal(dosen)} className="btn btn-primary mt-2 border">
-                              Edit
+                              <button
+                                to={`edit/${dosen.id_dosen}`}
+                                className="btn btn-primary mt-2 border"
+                                style={{ marginRight: '5px' }}
+                              >
+                                Edit
                               </button>
                             </Link>
-                            <button
-                              onClick={() => confirmDelete(dosen.id_dosen)}
-                              className="btn btn-danger mt-2 border"
-                            >
+                            <button onClick={() => confirmDelete(dosen.id_dosen)} className="btn btn-danger mt-2 border">
                               Delete
                             </button>
                           </td>
@@ -237,47 +164,31 @@ const Dosen = () => {
         </div>
       </div>
 
-      {/* Modal di sini di luar div dengan class container-fluid */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>{isEditing ? 'Edit Dosen' : 'Tambah Dosen'}</Modal.Title>
+          <Modal.Title>Tambah Dosen</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="edit_nama">
+            <Form.Group controlId="nama">
               <Form.Label>Nama</Form.Label>
-              <Form.Control
-                type="text"
-                name="nama"
-                value={editFormData.nama}
-                onChange={handleEditChange}
-              />
+              <Form.Control type="text" name="nama" value={formData.nama} onChange={handleChange} />
             </Form.Group>
-            <Form.Group controlId="edit_nip">
+            <Form.Group controlId="nip">
               <Form.Label>NIP</Form.Label>
-              <Form.Control
-                type="text"
-                name="nip"
-                value={editFormData.nip}
-                onChange={handleEditChange}
-              />
+              <Form.Control type="text" name="nip" value={formData.nip} onChange={handleChange} />
             </Form.Group>
-            <Form.Group controlId="edit_nidn">
+            <Form.Group controlId="nidn">
               <Form.Label>NIDN</Form.Label>
-              <Form.Control
-                type="text"
-                name="nidn"
-                value={editFormData.nidn}
-                onChange={handleEditChange}
-              />
+              <Form.Control type="text" name="nidn" value={formData.nidn} onChange={handleChange} />
             </Form.Group>
-            <Form.Group controlId="edit_no_whatsapp">
+            <Form.Group controlId="no_whatsapp">
               <Form.Label>NO WHATSAPP</Form.Label>
               <Form.Control
                 type="text"
                 name="no_whatsapp"
-                value={editFormData.no_whatsapp}
-                onChange={handleEditChange}
+                value={formData.no_whatsapp}
+                onChange={handleChange}
               />
             </Form.Group>
           </Form>
@@ -287,7 +198,7 @@ const Dosen = () => {
             Tutup
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            {isEditing ? 'Simpan Perubahan' : 'Simpan'}
+            Simpan
           </Button>
         </Modal.Footer>
       </Modal>

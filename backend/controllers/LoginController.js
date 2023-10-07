@@ -1,46 +1,81 @@
 const Admin = require("../models/LoginModel.js");
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
 
 const getAdmin = async(req, res) =>{
     try {
         const response = await Admin.findAll();
-        res.status(200).json(response);
+        res.json(response);
     } catch (error) {
         console.log(error.message);
     }
 }
 
 const login = async (req, res) => {
-    try {
+  console.log("Username yang dicari:", req.body.username);
+  try {
       const admin = await Admin.findOne({
-        where: {
-          username: req.body.username,
-        },
+          where: {
+              username: req.body.username
+          }
       });
+      const match = await bcrypt.compare(req.body.password, admin.password);
+      if (!match) return res.status(400).json({ msg: "Password salah" });
+      const adminID = admin.id;
+      const username = admin.username;
+      const accessToken = jwt.sign({ adminID, username }, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: '20s'
+      });
+
+      const refreshToken = jwt.sign({ adminID, username }, process.env.REFRESH_TOKEN_SECRET, {
+          expiresIn: '1d'
+      });
+
+      await Admin.update({ refresh_token: refreshToken }, {
+          where: {
+              id: adminID
+          }
+      });
+
+      res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000, // 1 day
+      });
+
+      res.json({ accessToken });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+}
   
-      if (!admin) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-  
-      const passwordMatch = await bcrypt.compare(req.body.password, admin.password);
-  
-      if (!passwordMatch) {
-        return res.status(401).json({ error: 'Invalid credentials password' });
-      }
-  
-      // If username and password are correct, you can generate and send a token here.
-      
-      res.status(200).json(admin); // You can customize the response as needed.
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  };
-  
+
+const logout = async (req, res) => {
+    console.log("Logout");
+    const refreshToken = req.cookies.refreshToken;
+
+    console.log("refreshToken:", refreshToken);
+
+    if(!refreshToken) return res.sendStatus(204);
+    const admin = await Admin.findAll({
+        where: {
+            refresh_token: refreshToken
+        }
+    });
+    if(!admin) return res.sendStatus(204);
+    const adminId = admin[0].id;
+    await Admin.update({ refresh_token: null }, {
+        where: {
+            id: adminId
+        }
+    });
+    res.clearCookie('refreshToken');
+    return res.sendStatus(200);
+
+}
 
 module.exports={
     getAdmin,
-    login
+    login,
+    logout
 }
 

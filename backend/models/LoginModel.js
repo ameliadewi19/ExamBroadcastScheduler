@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require("../config/Database.js");// Sesuaikan dengan path Anda
 
+
 const Admin = sequelize.define("Admin", {
   id: {
     type: DataTypes.INTEGER,
@@ -15,11 +16,13 @@ const Admin = sequelize.define("Admin", {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-  }, 
+  },
+  refresh_token: {  // refresh token
+    type: DataTypes.TEXT,
+  },
 },
   {
     freezeTableName: true, // This option prevents Sequelize from pluralizing the table name
-    timestamps: false, // Include createdAt and updatedAt columns
 });
 
 (async () => {

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../css/createDosen.css';
-require('dotenv').config();
 const backendUrl = process.env.BACKEND_URL;
 
 const Dosen = () => {

@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 import AddConfirmationModal from './AddConfirmationModal';
 import EditConfirmationModal from './EditConfirmationModal';
-require('dotenv').config();
 const backendUrl = process.env.BACKEND_URL;
+
 // Using Arrow Function
 const Confirmation = () => {
   const location = useLocation();

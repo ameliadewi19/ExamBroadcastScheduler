@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import feather from 'feather-icons';
-require('dotenv').config();
 const backendUrl = process.env.BACKEND_URL;
-
 const AddConfirmationModal = ({ reloadData }) => {
   const [formData, setFormData] = useState({ message: '', pembuka: '' });
   const [showModal, setShowModal] = useState(false);

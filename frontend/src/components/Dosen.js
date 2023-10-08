@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../css/createDosen.css';
+require('dotenv').config();
+const backendUrl = process.env.BACKEND_URL;
 
 const Dosen = () => {
   const [dosenData, setDosenData] = useState([]);
@@ -20,7 +22,7 @@ const Dosen = () => {
 
   const fetchDosenData = async () => {
     try {
-      const response = await axios.get('http://localhost:5005/dosen');
+      const response = await axios.get(`${backendUrl}/dosen`);
       setDosenData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -30,7 +32,7 @@ const Dosen = () => {
   const deleteDosen = async (id_dosen) => {
     console.log('ID yang akan dihapus:', id_dosen);
     try {
-      await axios.delete(`http://localhost:5005/dosen/${id_dosen}`);
+      await axios.delete(`${backendUrl}/dosen/${id_dosen}`);
       fetchDosenData();
     } catch (error) {
       console.log(error);
@@ -105,7 +107,7 @@ const Dosen = () => {
   const handleSubmit = async () => {
     if (formData.id_dosen) {
       try {
-        await axios.put(`http://localhost:5005/dosen/${formData.id_dosen}`, formData, {
+        await axios.put(`${backendUrl}/dosen/${formData.id_dosen}`, formData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -117,7 +119,7 @@ const Dosen = () => {
       }
     } else {
       try {
-        await axios.post('http://localhost:5005/dosen', formData, {
+        await axios.post(`${backendUrl}/dosen`, formData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -134,7 +136,7 @@ const Dosen = () => {
     const { id_dosen, ...formDataWithoutId } = formData; // Pisahkan id_dosen dari formData
   
     try {
-      await axios.patch(`http://localhost:5005/dosen/${id_dosen}`, formDataWithoutId, {
+      await axios.patch(`${backendUrl}/dosen/${id_dosen}`, formDataWithoutId, {
         headers: {
           'Content-Type': 'application/json',
         },

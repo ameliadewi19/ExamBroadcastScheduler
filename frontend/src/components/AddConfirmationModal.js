@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import feather from 'feather-icons';
+require('dotenv').config();
+const backendUrl = process.env.BACKEND_URL;
 
 const AddConfirmationModal = ({ reloadData }) => {
   const [formData, setFormData] = useState({ message: '', pembuka: '' });
@@ -14,7 +16,7 @@ const AddConfirmationModal = ({ reloadData }) => {
   };
 
   const handleAddConfirmation = () => {
-    axios.post('http://localhost:5005/confirmations', formData)
+    axios.post(`${backendUrl}/confirmations`, formData)
       .then(response => {
         console.log('Confirmation added successfully');
         setFormData({ message: '', pembuka: '' });

@@ -17,7 +17,7 @@ const JadwalUjian = () => {
   }, []);
 
   const fetchUjianData = () => {
-    axios.get('http://localhost:5000/jadwal-ujian')
+    axios.get('http://localhost:5005/jadwal-ujian')
       .then(response => {
         setUjianData(response.data);
       })
@@ -57,7 +57,7 @@ const JadwalUjian = () => {
       ruangan: updatedItem.ruangan,
       id_pengawas: updatedItem.id_dosen_pengawas,
     };
-    axios.patch(`http://localhost:5000/jadwal-ujian/${updatedItem.id_ujian}`, updatedData)
+    axios.patch(`http://localhost:5005/jadwal-ujian/${updatedItem.id_ujian}`, updatedData)
       .then(response => {
         console.log('Update successful');
         fetchUjianData();
@@ -83,7 +83,7 @@ const JadwalUjian = () => {
     const confirmDelete = window.confirm(`Are you sure you want to delete data Jadwal with ID ${id}?`);
     
     if (confirmDelete) {
-      axios.delete(`http://localhost:5000/jadwal-ujian/${id}`)
+      axios.delete(`http://localhost:5005/jadwal-ujian/${id}`)
         .then(response => {
           console.log('Delete successful');
           fetchUjianData();
@@ -105,7 +105,7 @@ const JadwalUjian = () => {
     
     if (confirmUpload) {
       try {
-        const response = await axios.post('http://localhost:5000/jadwal-ujian', formData, {
+        const response = await axios.post('http://localhost:5005/jadwal-ujian', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

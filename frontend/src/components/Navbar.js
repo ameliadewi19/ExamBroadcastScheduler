@@ -12,7 +12,7 @@ const Navbar = ({ toggleSidebar }) => {
   function handleLogout() {
     // Melakukan permintaan logout ke server
     axios
-      .delete("http://localhost:5000/logout")
+      .delete("http://localhost:5005/logout")
       .then((response) => {
         console.log("Logout berhasil", response.data);
 

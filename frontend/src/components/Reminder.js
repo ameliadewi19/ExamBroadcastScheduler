@@ -21,7 +21,7 @@ const Reminder = () => {
     }, []);
 
     const fetchHistoryData = () => {
-        axios.get('http://localhost:5000/reminder')
+        axios.get('http://localhost:5005/reminder')
           .then(response => {
             // Assuming the response data has both reminders and histories
             const { reminders, histories } = response.data;

@@ -11,7 +11,7 @@ const EditReminderModal = ({ reloadData, id }) => {
   useEffect(() => {
     // Fetch data based on the provided id
     if (id) {
-      axios.get(`http://localhost:5000/reminder/${id}`)
+      axios.get(`http://localhost:5005/reminder/${id}`)
         .then(response => {
           const { pembuka, message } = response.data; // Assuming response is in JSON format
           setFormData({ pembuka, message });
@@ -31,7 +31,7 @@ const EditReminderModal = ({ reloadData, id }) => {
 
   const handleEditReminder = (e) => {
     console.log("idnya", e);
-    axios.put(`http://localhost:5000/reminder/${e}`, formData)
+    axios.put(`http://localhost:5005/reminder/${e}`, formData)
       .then(response => {
         console.log('Reminder updated successfully');
         // Optimistically update UI

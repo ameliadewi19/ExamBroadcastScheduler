@@ -22,7 +22,7 @@ const Confirmation = () => {
   }, []);
 
   const fetchConfirmationData = () => {
-    axios.get('http://localhost:5000/confirmations')
+    axios.get('http://localhost:5005/confirmations')
       .then(response => {
         // Sort the data by ID in ascending order
         const sortedData = response.data.sort((a, b) => a.id - b.id);
@@ -37,7 +37,7 @@ const Confirmation = () => {
     const confirmDelete = window.confirm(`Are you sure you want to delete data Confirmation Template with ID ${id}?`);
     
     if (confirmDelete) {
-        axios.delete(`http://localhost:5000/confirmations/${id}`)
+        axios.delete(`http://localhost:5005/confirmations/${id}`)
           .then(response => {
             console.log('Delete successful');
             fetchConfirmationData();
@@ -50,7 +50,7 @@ const Confirmation = () => {
 
   const handleSend = (id) => {
     // Send a DELETE request to your endpoint with the selected id
-    axios.post('http://localhost:5000/send-confirmation', { id: id })
+    axios.post('http://localhost:5005/send-confirmation', { id: id })
       .then(response => {
         console.log('Send successful');
         // Refresh the data after deletion

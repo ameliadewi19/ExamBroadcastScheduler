@@ -11,7 +11,7 @@ const EditConfirmationModal = ({ reloadData, id }) => {
   useEffect(() => {
     // Fetch data based on the provided id
     if (id) {
-      axios.get(`http://localhost:5005/confirmations/${id}`)
+      axios.get(`http://194.233.93.124:5005/confirmations/${id}`)
         .then(response => {
           const { message, pembuka } = response.data; // Assuming response is in JSON format
           setFormData({ message, pembuka });
@@ -31,7 +31,7 @@ const EditConfirmationModal = ({ reloadData, id }) => {
 
   const handleEditConfirmation = (e) => {
     console.log("idnya", e);
-    axios.put(`http://localhost:5005/confirmations/${e}`, formData)
+    axios.put(`http://194.233.93.124:5005/confirmations/${e}`, formData)
       .then(response => {
         console.log('Confirmation updated successfully');
         // Optimistically update UI

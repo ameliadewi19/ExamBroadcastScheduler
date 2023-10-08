@@ -10,7 +10,7 @@
 
       const fetchQRCode = async () => {
         try {
-          const response = await axios.get('http://localhost:5005/generate-qr');
+          const response = await axios.get('http://194.233.93.124:5005/generate-qr');
           const data = response.data;
           setUniqueToken(data.uniqueToken);
         } catch (error) {

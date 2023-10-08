@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import feather from 'feather-icons';
-const backendUrl = process.env.BACKEND_URL;
 const AddConfirmationModal = ({ reloadData }) => {
   const [formData, setFormData] = useState({ message: '', pembuka: '' });
   const [showModal, setShowModal] = useState(false);
@@ -14,7 +13,7 @@ const AddConfirmationModal = ({ reloadData }) => {
   };
 
   const handleAddConfirmation = () => {
-    axios.post(`${backendUrl}/confirmations`, formData)
+    axios.post(`http://194.233.93.124:5005/confirmations`, formData)
       .then(response => {
         console.log('Confirmation added successfully');
         setFormData({ message: '', pembuka: '' });

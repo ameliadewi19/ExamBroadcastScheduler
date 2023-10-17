@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Swal from 'sweetalert2';
 
 const JadwalUjian = () => {
   const location = useLocation();
@@ -80,9 +81,16 @@ const JadwalUjian = () => {
   };
 
   const handleDelete = (id) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete data Jadwal with ID ${id}?`);
-    
-    if (confirmDelete) {
+    Swal.fire({
+      title: `Are you sure you want to delete Jadwal with ID ${id}?`,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
       axios.delete(`http://194.233.93.124:5005/jadwal-ujian/${id}`)
         .then(response => {
           console.log('Delete successful');
@@ -91,7 +99,8 @@ const JadwalUjian = () => {
         .catch(error => {
           console.error(error);
         });
-    }
+      }
+    });
   };
 
   const handleFileUpload = async (e) => {

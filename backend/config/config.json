@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "postgres",
-    "password": "mysecretpassword",
+    "password": "12345",
     "database": "exam_bm_scheduler_dev",
     "host": "localhost",
-    "port": "5442",
+    "port": "5432",
     "dialect": "postgres"
   },
   "test": {

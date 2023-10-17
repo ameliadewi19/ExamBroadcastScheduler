@@ -47,7 +47,6 @@ const login = async (req, res) => {
 //       res.status(500).json({ error: error.message });
 //   }
 }
-  
 
 const logout = async (req, res) => {
     console.log("Logout");
@@ -55,22 +54,28 @@ const logout = async (req, res) => {
 
     console.log("refreshToken:", refreshToken);
 
-    if(!refreshToken) return res.sendStatus(204);
-    const admin = await Admin.findAll({
+    if (!refreshToken) return res.sendStatus(204);
+
+    // Mencari admin berdasarkan refreshToken
+    const admin = await Admin.findOne({
         where: {
             refresh_token: refreshToken
         }
     });
-    if(!admin) return res.sendStatus(204);
-    const adminId = admin[0].id;
+
+    if (!admin) return res.sendStatus(204);
+
+    const adminId = admin.id;
+
+    // Hapus refreshToken dari admin
     await Admin.update({ refresh_token: null }, {
         where: {
             id: adminId
         }
     });
+
     res.clearCookie('refreshToken');
     return res.sendStatus(200);
-
 }
 
 module.exports={

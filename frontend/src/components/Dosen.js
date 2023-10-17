@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import '../css/createDosen.css';
+import Swal from 'sweetalert2';
 
 const Dosen = () => {
   const [dosenData, setDosenData] = useState([]);
@@ -38,10 +39,18 @@ const Dosen = () => {
   };
 
   const confirmDelete = (id_dosen) => {
-    const shouldDelete = window.confirm('Apakah Anda yakin ingin menghapus data ini?');
-    if (shouldDelete) {
+    Swal.fire({
+      title: 'Are you sure you want to delete this data?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
       deleteDosen(id_dosen);
     }
+    );
   };
 
   const handleShowModal = () => {

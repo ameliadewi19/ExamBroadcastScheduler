@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -15,11 +16,10 @@ function Login() {
     setPassword(e.target.value);
   };
   const [message, setMessage] = useState('');
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post('http://194.233.93.124:5005/login', {
         username,
@@ -29,14 +29,15 @@ function Login() {
       const token = response.data.accessToken;
       
       localStorage.setItem('jwt_token', token);
-
-      console.log("token:", token);
-
-      // If login is successful, redirect to the dashboard
+      //axios.defaults.headers.common['Authorization'] = Bearer ${token};
       console.log('Login berhasil', response.data);
-      history('/dashboard'); // Use navigate to redirect to the dashboard route
+      navigate('/dashboard'); // Use navigate to redirect to the dashboard route
     } catch (err) {
-      setError('Login gagal. Username atau password salah.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Gagal',
+        text: 'Username atau password salah.',
+      });      
     }
   };
 
@@ -56,7 +57,7 @@ function Login() {
               <div className="card">
                 <div className="card-body">
                   <div className="m-sm-3">
-                    {error && <div className="error">{error}</div>}
+                    {/* {error && <div className="error text-danger">{error}</div>} */}
                     <form onSubmit={handleSubmit}>
                       <div className="mb-3">
                         <label className="form-label">Username</label>
@@ -80,9 +81,6 @@ function Login() {
                     </form>
                   </div>
                 </div>
-              </div>
-              <div className="text-center mb-3">
-                Don't have an account? <a href="pages-sign-up.html">Sign up</a>
               </div>
             </div>
           </div>

@@ -1,58 +1,71 @@
-  import React, { useState, useEffect } from 'react';
-  import axios from 'axios';
-  import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  
+import QRModal from './QRModal';  
 
-  // Using Arrow Function
-  const Dashboard = () => {
-      const history = useNavigate();
+// Using Arrow Function
+const Dashboard = () => {
+  const history = useNavigate();
+  const [qrPath, setQRPath] = useState('');
 
-      const [uniqueToken, setUniqueToken] = useState('');
+  const fetchQRCode = async () => {
+    try {
+      const response = await axios.get('http://194.233.93.124:5005/generate-qr');
+      const data = response.data;
+      setQRPath(data.qrPath);
+      console.log("Path");
+    } catch (error) {
+      console.error('Error fetching QR code:', error);
+    }
+  };
 
-      const fetchQRCode = async () => {
-        try {
-          const response = await axios.get('http://194.233.93.124:5005/generate-qr');
-          const data = response.data;
-          setUniqueToken(data.uniqueToken);
-        } catch (error) {
-          console.error('Error fetching QR code:', error);
-        }
-      };
+  const handleAuthButtonClick = async () => {
+    // Panggil fungsi untuk mengambil QR code saat tombol ditekan
+    console.log('Button clicked');
+    fetchQRCode();
+    const response = await axios.get('http://194.233.93.124:5005/generate-qr');
+    const data = response.data;
+    setQRPath(data.qrPath);
+    console.log("Path");
+    console.log('Button 2 clicked');
+  };
 
-      const handleAuthButtonClick = () => {
-        // Panggil fungsi untuk mengambil QR code saat tombol ditekan
-        fetchQRCode();
-      };
+  return (
+          <main class="content">
+            <div class="container-fluid p-0">
 
-      return (
-        <main class="content">
-          <div class="container-fluid p-0">
-
-            <h1 class="h3 mb-3"><strong>Exam</strong> Broadcast Message</h1>
-            <div class="row">
-              <div class="col-xl-12 col-xxl-5 d-flex">
-                <div class="w-100">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col mt-0">
-                              <h5 class="card-title">Autentikasi ke WhatsApp</h5>
-                              <h6>Selamat datang di Web Exam Broadcast Message. Silahkan klik tombol dibawah untuk melakukan autentikasi whatsapp saat pertama kali menggunakan/session login habis.</h6>
+              <h1 class="h3 mb-3"><strong>Exam</strong> Broadcast Message</h1>
+              <div class="row">
+                <div class="col-xl-12 col-xxl-5 d-flex">
+                  <div class="w-100">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col mt-0">
+                                <h5 class="card-title">Autentikasi ke WhatsApp</h5>
+                                <h6>Selamat datang di Web Exam Broadcast Message. Silahkan klik tombol dibawah untuk melakukan autentikasi whatsapp saat pertama kali menggunakan/session login habis.</h6>
+                              </div>
                             </div>
+                            {/* <button className='btn btn-primary' onClick={handleAuthButtonClick}>Autentikasi disini</button> */}
+                            <button type="button" className="btn btn-primary mt-2 mr-2" onClick={() => handleAuthButtonClick()} data-bs-toggle="modal" data-bs-target="#qrModal">
+                              <i className="align-middle" data-feather="edit"></i> Show QR Code
+                            </button>
+                            <QRModal
+                                qrPath={"/qrcodes/qrcode.png"}
+                              />
                           </div>
-                          <button className='btn btn-primary' onClick={handleAuthButtonClick}>Autentikasi disini</button> {/* Tambahkan tombol autentikasi */}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-          </div>
-        </main>
-      );
+            </div>
+          </main>
+        );
   };
 
-  export default Dashboard;
+export default Dashboard;

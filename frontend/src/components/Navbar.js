@@ -10,25 +10,21 @@ const Navbar = ({ toggleSidebar }) => {
   }, []);
 
   function handleLogout() {
-    // Melakukan permintaan logout ke server
-    axios
-      .delete("http://194.233.93.124:5005/logout")
-      .then((response) => {
-        console.log("Logout berhasil", response.data);
+	// Melakukan permintaan logout ke server
+	axios.delete('http://194.233.93.124:5005/logout')
+	.then((response) => {
+		console.log('Logout berhasil', response.data);
 
-        // Jika logout berhasil, Anda dapat menghapus token dari penyimpanan di sisi klien
-        localStorage.removeItem("jwt_token");
-        Cookies.remove("jwt_token");
-        // Redirect ke halaman login
-        window.location.href = "/";
+		localStorage.removeItem('jwt_token');
+		Cookies.remove('refreshToken');
 
-        // Anda juga dapat mengarahkan pengguna ke halaman login atau melakukan tindakan lain yang sesuai.
-      })
-      .catch((error) => {
-        // Handle kesalahan jika logout gagal
-        console.error("Logout gagal", error);
-      });
-  }
+		window.location.href = '/';
+  
+	  })
+	  .catch((error) => {
+		console.error('Logout gagal', error);
+	  });
+}
 
   return (
     <nav className="navbar navbar-expand navbar-light navbar-bg">

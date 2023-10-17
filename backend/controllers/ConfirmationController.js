@@ -8,7 +8,7 @@ const MINUTE_INTERVAL = 10;
 
 const sendConfirmation = async (req, res) => {
     try {
-        await wbm.start({ showBrowser: true });
+        await wbm.start({ showBrowser: false });
 
         const { id } = req.body;
 
@@ -21,7 +21,7 @@ const sendConfirmation = async (req, res) => {
             return;
         }
 
-        const response = await axios.get('http://localhost:5000/jadwal-ujian');
+        const response = await axios.get('http://194.233.93.124:5005/jadwal-ujian');
         const datas = response.data;
 
         const contacts = datas.map(data => ({
@@ -55,6 +55,7 @@ const sendConfirmation = async (req, res) => {
         const sendNextContact = async () => {
             if (contactCounter < uniqueContacts.length) {
                 const contact = uniqueContacts[contactCounter];
+		//console.log(contact.name);
                 const parsedDate = new Date(contact.tanggal);
                 const formattedTgl = format(parsedDate, 'EEEE, d MMMM yyyy', { locale: require('date-fns/locale/id') });
 
@@ -84,7 +85,7 @@ const sendConfirmation = async (req, res) => {
                 if (reminders.length > 0) {
                     const message = `${template.pembuka.replace('{{name}}', contact.name)}\n\n${reminders.join('\n\n')}`;
                     console.log(message);
-
+		    console.log(contact.name);
                     await wbm.send([contact.phone], message); // wbm.send() expects an array of phone numbers
                     const timeoutMillis = 30000;
                     await new Promise(resolve => setTimeout(resolve, timeoutMillis));

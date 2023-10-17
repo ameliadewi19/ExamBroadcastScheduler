@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 import AddConfirmationModal from './AddConfirmationModal';
 import EditConfirmationModal from './EditConfirmationModal';
+import Swal from 'sweetalert2';
 
 // Using Arrow Function
 const Confirmation = () => {
@@ -33,10 +34,18 @@ const Confirmation = () => {
       });
   };
 
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete data Confirmation Template with ID ${id}?`);
+  const handleDelete = async (id) => {
+    const confirmDelete = await Swal.fire({
+      title: `Are you sure you want to delete Confirmation Template with ID ${id}?`,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    });
     
-    if (confirmDelete) {
+    if (confirmDelete.isConfirmed) {
         axios.delete(`http://194.233.93.124:5005/confirmations/${id}`)
           .then(response => {
             console.log('Delete successful');
@@ -45,20 +54,40 @@ const Confirmation = () => {
           .catch(error => {
             console.error(error);
           });
-    }
+      }
+      
   };
 
   const handleSend = (id) => {
-    // Send a DELETE request to your endpoint with the selected id
-    axios.post(`http://194.233.93.124:5005/send-confirmation`, { id: id })
-      .then(response => {
-        console.log('Send successful');
-        // Refresh the data after deletion
-        fetchConfirmationData();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    Swal.fire({
+      title: `Send confirmation with template message ID ${id}?`,
+      text: "This action cannot be undone.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, send it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+      // Send a DELETE request to your endpoint with the selected id
+      axios.post(`http://194.233.93.124:5005/send-confirmation`, { id: id })
+        .then(response => {
+          console.log('Send successful');
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Send Successful',
+            text: 'The confirmation has been sent successfully.'
+          });
+
+          // Refresh the data after deletion
+          fetchConfirmationData();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+    });
   };
 
   return (

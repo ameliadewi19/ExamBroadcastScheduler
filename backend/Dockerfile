@@ -1,10 +1,15 @@
 FROM node:18-alpine
 
+# Instal Chromium
+RUN apk --no-cache add chromium
+
 WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm install -g nodemon && npm install
+
+RUN npm install @sparticuz/chromium --save
 
 COPY . ./
 

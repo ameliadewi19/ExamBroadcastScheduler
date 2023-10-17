@@ -12,6 +12,29 @@ import Dosen from './components/Dosen.js';
 import JadwalUjian from './components/JadwalUjian.js';
 import Reminder from './components/Reminder.js';
 
+function checkAuthorization() {
+  const token = localStorage.getItem('jwt_token');
+
+  console.log("token lokal:", token);
+  
+  if (!token) {
+    return false;
+  }
+  return true;
+}
+
+function ProtectedRoute({ children }) {
+  const location = useLocation();
+
+  const userHasAuthorization = checkAuthorization(); 
+
+  if (!userHasAuthorization) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+}
+
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -112,4 +135,3 @@ function App() {
 }
 
 export default App;
-

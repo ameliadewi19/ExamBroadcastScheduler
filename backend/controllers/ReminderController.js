@@ -11,7 +11,7 @@ const MINUTE_INTERVAL = 10; // 10 minutes in minutes
 //Task send H-1
 cron.schedule('0 17 * * *', async () => {
     try {
-        const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
+        const response = await axios.get('http://194.233.93.124:5005/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
 
         const currentDate = new Date();
@@ -54,7 +54,7 @@ cron.schedule('0 17 * * *', async () => {
             return;
         }
 
-        await wbm.start({ showBrowser: true });
+        await wbm.start({ showBrowser: false });
 
         let contactCounter = 0;
 
@@ -132,7 +132,7 @@ cron.schedule('0 17 * * *', async () => {
 //Task send D-Day
 cron.schedule('0 5 * * *', async () => {
     try {
-        const response = await axios.get('http://localhost:5000/jadwal-ujian'); // Replace with your API endpoint URL
+        const response = await axios.get('http://194.233.93.124:5005/jadwal-ujian'); // Replace with your API endpoint URL
         const datas = response.data;
         const currentDate = new Date();
 

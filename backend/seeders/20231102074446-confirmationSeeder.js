@@ -8,11 +8,11 @@ module.exports = {
     
     await queryInterface.bulkInsert('ConfirmationTemplate', [
       {
-        pembuka: 'Hallo Ibu/Bapak {{nama}}, apakah bersedia untuk mengawas ujian berikut: \n',
+        pembuka: 'Hallo Ibu/Bapak {{nama}}, apakah bersedia untuk mengawas ujian berikut: ',
         message: 'Mata Kuliah: {{matkul}}\nTanggal: {{tanggal}}\nWaktu: {{waktu_mulai}} - {{waktu_selesai}}\nRuangan: {{ruangan}} \nKelas: {{kelas}}',
       },
       {
-        pembuka: 'Hai Ibu/Bapak {{nama}}, apakah bersedia untuk mengawas',
+        pembuka: 'Hai Ibu/Bapak {{nama}}, apakah bersedia untuk mengawas: ',
         message: 'Ujian mata kuliah {{matkul}}, pada tanggal {{tanggal}} kelas {{kelas}}, dari pukul {{waktu_mulai}} sampai {{waktu_selesai}}, di ruangan {{ruangan}} ',
       }
     ], {});

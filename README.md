@@ -20,3 +20,7 @@ npx sequelize-cli db:seed:all
 cd frontend
 npm install
 ```
+
+## Login 
+Username: admin <br/>
+Password: admin123
